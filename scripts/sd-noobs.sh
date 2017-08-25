@@ -45,7 +45,7 @@ function copyfile() {
 
 function format() {
     while true; do
-        read -p "SDCARD  : Remove all SD cards. Enter "y" when ready:" yn
+        read -p "SDCARD  : Eject and remove all SD cards. Enter "y" when ready:" yn
         case $yn in
             [Yy]* ) break;;
             [Nn]* ) exit;;
@@ -100,45 +100,92 @@ function format() {
         esac
     done
         
-    echo -e "SDCARD\t: creating MSDOS partition..."
-    CMD="parted $SD mklabel msdos "
+    echo -e "SDCARD\t: initializing MSDOS partition table..."
+    CMD="parted -s $SD -- mklabel msdos "
     echo -e "SDCARD\t: $CMD"
     $CMD
-    sync
+    RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: FAILED RC:$RC"; exit; fi 
+    sleep 3
 
-    echo -e "SDCARD\t: creating MSDOS partition..."
-    CMD="parted $SD mkpart primary 1M 100%"
-    echo -e "SDCARD\t: $CMD"
-    $CMD
-    sync
+    echo -e "SDCARD\t: creating partition "
+    fdisk $SD <<HEREFDISK
+p
+n
+p
+1
+2048
 
-    echo -e "SDCARD\t: making MSDOS partition bootable..."
-    CMD="parted $SD set 1 boot on"
-    echo -e "SDCARD\t: $CMD"
-    $CMD
-    sync
+a
+1
+p
+w
+q
+HEREFDISK
+    RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: fdisk FAILED RC:$RC"; exit; fi 
 
-    echo -e "SDCARD\t: formatting partition..."
-    CMD="mkfs.msdos ${SD}1"
-    echo -e "SDCARD\t: $CMD"
-    $CMD
-    sync
-
-    ZIP=`ls *.zip`
-    SDDIR="/media/removable/SD CARD"
-    if [ -e $ZIP ] && [ -e SDDIR ]; then
-        echo -e "SDCARD\t: expanding ${ZIP} to SDCARD"
-        CMD="unzip -v -d ${SDDIR} ${ZIP}"
+    if [ "parted" == "true" ]; then
+        echo -e "SDCARD\t: initializing MSDOS partition table..."
+        CMD="parted -s $SD -- mklabel msdos "
         echo -e "SDCARD\t: $CMD"
-        $CMD
+        parted -s $SD -- \
+    mklabel msdos \
+    mkpart primary 4MiB 100% \
+    set 1 boot on
+
+        RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: FAILED RC:$RC"; exit; fi 
         sync
-        echo -e "SDCARD\t: Remove SD card"
-    else
-        echo -e "SDCARD\t: SDCARD is formatted and empty"
+        sleep 3
     fi
 
+    echo -e "SDCARD\t: formatting partition as FAT32..."
+    CMD="mkfs.vfat ${SD}1"
+    echo -e "SDCARD\t: $CMD"
+    $CMD
+    RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: FAILED RC:$RC"; exit; fi 
+    sync
+
+    while true; do
+        read -p "SDCARD  : Eject and reinsert SD card. Enter "y" when ready:" yn
+        case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) exit;;
+                * ) echo "        : Please answer yes or no.";;
+        esac
+    done
+    sleep 1
+
+    ZIP=`find . -name "NOOBS*.zip"`
+    echo -e "ZIP\t: ${ZIP}"
+    if [ -e "${ZIP}" ]; then
+        echo -e "NOOBS\t: NOOBS found at ${ZIP}"
+    else
+        echo -e "NOOBS\t: NOOBS not found "
+        echo -e "SDCARD\t: SDCARD is formatted but empty"
+        exit
+    fi
+
+    SDDIR=`find / -name 'SD Card'`
+    ln -s -f -T "${SDDIR}" sd-noobs
+    SDDIR=sd-noobs
+
+    if [ -e "${SDDIR}" ]; then
+        echo -e "SDCARD\t: SD Card found at ${SDDIR}"
+    else
+        echo -e "SDCARD\t: 'SD Card' not found "
+        echo -e "SDCARD\t: SDCARD is formatted but empty"
+        exit
+    fi
+
+    echo -e "SDCARD\t: expanding ${ZIP} to SDCARD"
+    CMD="unzip -d '${SDDIR}' ${ZIP}"
+    echo -e "SDCARD\t: $CMD"
+    unzip -d ${SDDIR} ${ZIP}
+    RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: FAILED RC:$RC"; exit; fi 
+    sync
+
+    echo -e "SDCARD\t: Remove SD card"
     echo -e "DONE\t: $0" `date`
 } #format
-format 2>&1 | tee sd-format
+format 2>&1 
 
 exit 0
