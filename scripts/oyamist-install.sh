@@ -11,4 +11,4 @@ sudo chown pi:pi /var/log/motion
 echo -e "INSTALL\t: installing Node V8"
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 
-echo -e "INSTALL\t: `date` OyaMist Raspberry Pi setup copmleted"
+echo -e "INSTALL\t: `date` OyaMist Raspberry Pi setup completed"
