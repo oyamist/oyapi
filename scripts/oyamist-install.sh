@@ -4,7 +4,7 @@ echo -e "INSTALL\t: `date` setting up Raspberry Pi"
 if [ ! -e node_modules ]; then
     echo -e "INSTALL\t: installing nodejs"
     curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -o
-    sudo apt install nodejs
+    sudo apt install -y nodejs
 fi
 
 exit
