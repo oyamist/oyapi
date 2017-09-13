@@ -76,17 +76,20 @@ function format() {
         echo -e "ERROR\t: No SD card detected"
         exit 1
     fi
-    if [ "$SD1" == "" ]; then
-        echo -e "SDCARD\t: SD card has no mounted partitions"
-    else 
-        echo -e "SDCARD\t: unmounting partitions..."
-        SDMOUNT=`df -h --output=target $SD1 | sed -n 2p | sed 'sx/[^/]*$xx'`
-        if [ "$SD1" != "" ]; then sdunmount $SD1; fi
-        if [ "$SD2" != "" ]; then sdunmount $SD2; fi
-        if [ "$SD3" != "" ]; then sdunmount $SD3; fi
-        if [ "$SD4" != "" ]; then sdunmount $SD4; fi
-        if [ "$SD5" != "" ]; then sdunmount $SD5; fi
-        if [ "$SDMOUNT" == "" ]; then SDMOUNT="/mnt"; fi
+    
+    if [ "unmount" == "true" ]; then
+        if [ "$SD1" == "" ]; then
+            echo -e "SDCARD\t: SD card has no mounted partitions"
+        else 
+            echo -e "SDCARD\t: unmounting partitions..."
+            SDMOUNT=`df -h --output=target $SD1 | sed -n 2p | sed 'sx/[^/]*$xx'`
+            if [ "$SD1" != "" ]; then sdunmount $SD1; fi
+            if [ "$SD2" != "" ]; then sdunmount $SD2; fi
+            if [ "$SD3" != "" ]; then sdunmount $SD3; fi
+            if [ "$SD4" != "" ]; then sdunmount $SD4; fi
+            if [ "$SD5" != "" ]; then sdunmount $SD5; fi
+            if [ "$SDMOUNT" == "" ]; then SDMOUNT="/mnt"; fi
+        fi
     fi
 
     parted $SD print
@@ -100,12 +103,13 @@ function format() {
         esac
     done
         
-    echo -e "SDCARD\t: initializing MSDOS partition table..."
-    CMD="parted -s $SD -- mklabel msdos "
-    echo -e "SDCARD\t: $CMD"
-    $CMD
-    RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: FAILED RC:$RC"; exit; fi 
-    sleep 3
+    if [ "$SD1" != "" ]; then 
+        echo -e "SDCARD\t: erasing partition 1..."
+        fdisk $SD <<HEREERASE
+d
+w
+HEREERASE
+    fi
 
     echo -e "SDCARD\t: creating partition "
     fdisk $SD <<HEREFDISK
@@ -115,27 +119,24 @@ p
 1
 2048
 
+t
+b
+p
 a
 1
 p
 w
-q
 HEREFDISK
-    RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: fdisk FAILED RC:$RC"; exit; fi 
 
-    if [ "parted" == "true" ]; then
-        echo -e "SDCARD\t: initializing MSDOS partition table..."
-        CMD="parted -s $SD -- mklabel msdos "
-        echo -e "SDCARD\t: $CMD"
-        parted -s $SD -- \
-    mklabel msdos \
-    mkpart primary 4MiB 100% \
-    set 1 boot on
-
-        RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: FAILED RC:$RC"; exit; fi 
-        sync
-        sleep 3
-    fi
+    while true; do
+        read -p "SDCARD  : Eject but do not remove SD card. Enter "y" when ready:" yn
+        case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) exit;;
+                * ) echo "        : Please answer yes or no.";;
+        esac
+    done
+    sleep 1
 
     echo -e "SDCARD\t: formatting partition as FAT32..."
     CMD="mkfs.vfat ${SD}1"
@@ -145,7 +146,7 @@ HEREFDISK
     sync
 
     while true; do
-        read -p "SDCARD  : Eject and reinsert SD card. Enter "y" when ready:" yn
+        read -p "SDCARD  : Remove and reinsert SD card. Enter "y" when ready:" yn
         case $yn in
             [Yy]* ) break;;
             [Nn]* ) exit;;
@@ -165,8 +166,13 @@ HEREFDISK
     fi
 
     SDDIR=`find / -name 'SD Card'`
-    ln -s -f -T "${SDDIR}" sd-noobs
-    SDDIR=sd-noobs
+    if [ -e $SDDIR ]; then
+        echo -e "SDCARD\t: SD card found at $SDCARD"
+    else 
+        echo -e "SDCARD\t: No SD card found $SDCARD"
+    fi
+    ln -s -f -T "${SDDIR}" SDCard
+    SDDIR=SDCard
 
     if [ -e "${SDDIR}" ]; then
         echo -e "SDCARD\t: SD Card found at ${SDDIR}"
@@ -177,13 +183,14 @@ HEREFDISK
     fi
 
     echo -e "SDCARD\t: expanding ${ZIP} to SDCARD"
-    CMD="unzip -d '${SDDIR}' ${ZIP}"
+    CMD="unzip -o -d ${SDDIR} ${ZIP}"
     echo -e "SDCARD\t: $CMD"
-    unzip -d ${SDDIR} ${ZIP}
+    $CMD
+    #unzip -o -d ${SDDIR} ${ZIP}
     RC=$?;if [ "$RC" != "0" ]; then echo -e "ERROR\t: FAILED RC:$RC"; exit; fi 
     sync
 
-    echo -e "SDCARD\t: Remove SD card"
+    echo -e "SDCARD\t: Eject and remove SD card"
     echo -e "DONE\t: $0" `date`
 } #format
 format 2>&1 

@@ -1,6 +1,6 @@
 # OyaPi
 *.zip
-sd-noobs
+**/SDCard
 
 # Logs
 logs

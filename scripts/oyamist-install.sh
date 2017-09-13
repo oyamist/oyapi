@@ -1,6 +1,13 @@
 #!/bin/bash
-echo -e "INSTALL\t: `date` setting up Raspberry Pi`
+echo -e "INSTALL\t: `date` setting up Raspberry Pi"
 
+if [ ! -e node_modules ]; then
+    echo -e "INSTALL\t: installing nodejs"
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -o
+    sudo apt install nodejs
+fi
+
+exit
 scripts/opencv-install.sh
 
 echo -e "INSTALL\t: installing webcam motion capture"
