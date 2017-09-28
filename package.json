@@ -9,8 +9,7 @@
     "src": "src"
   },
   "dependencies": {
-    "oya-vue": "^0.1.0",
-    "rest-bundle": "^0.21.11",
+    "oya-vue": "^0.1.1",
     "rimraf": "^2.6.1",
     "rpio": "^0.9.17"
   },
@@ -29,9 +28,8 @@
   },
   "scripts": {
     "build": "bash scripts/build",
-    "build:vue": "npm run build:vue-dev && npm run build:vue-service",
+    "build:vue": "npm run build:vue-dev ",
     "build:vue-dev": "cross-env NODE_ENV=production webpack --config cfg/webpack.dev.js --progress --hide-modules",
-    "build:vue-service": "cross-env NODE_ENV=production webpack --config cfg/webpack.service.js --progress --hide-modules",
     "clean": "rm -f *.log*; rimraf dist; rimraf .motion",
     "dev": "concurrently \"scripts/server.js test aloha\" \"npm run dev:vue\"",
     "dev:debug": "concurrently \"scripts/server.js --log-debug test aloha\" \"npm run dev:vue\"",

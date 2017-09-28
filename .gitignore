@@ -1,6 +1,8 @@
 # OyaPi
 *.zip
 **/SDCard
+dist
+api-model/
 
 # Logs
 logs

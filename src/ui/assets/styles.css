@@ -1,0 +1,27 @@
+.expansion-panel__header {
+    background-color: #f0f0f0 ;
+    color: #888;
+}
+.expansion-panel, .expansion-panel>li {
+    border-top-left-radius: 0.4em !important;
+    border-top-right-radius: 0.4em !important;
+}
+.expansion-panel:last-child, .expansion-panel>li {
+    border-bottom-left-radius: 0.4em !important;
+    border-bottom-right-radius: 0.4em !important;
+}
+.rb-panel-header {
+    position:absolute; 
+    top:0.5em;
+    left:2.5em;
+}
+.rb-panel-icon {
+    position:absolute;
+    top:0.35em;
+    left:0.5em;
+}
+.input-group label {
+   font-size: 14px !important;
+}
+
+
