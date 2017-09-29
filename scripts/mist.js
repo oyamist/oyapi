@@ -13,7 +13,9 @@ var offSec = Number(cycleTokens[1]) || 60;
 
 console.log(`mist\t: misting cycle on:${onSec}s off:${offSec}s`);
 
-const rpio = require('rpio');
+try {
+    const rpio = require('rpio');
+
     console.log("TEST\t: GPIO 2 (Pin 3) LOW");
     rpio.open(3, rpio.OUTPUT, rpio.LOW);
     console.log("TEST\t: GPIO 3 (Pin 5) HIGH");
@@ -31,7 +33,9 @@ const rpio = require('rpio');
             console.log("TEST\t: GPIO 3 (Pin 5) HIGH");
         }
     }, 5000);
-
-
-    console.log("TEST\t: GPIO blink test END");
+} catch (err) {
+    console.log("error", err, err.stack);
+    throw err;
 }
+
+console.log("TEST\t: GPIO blink test END");
