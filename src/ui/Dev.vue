@@ -16,27 +16,6 @@
             </v-list-tile-action>
           </v-list-tile>
         </div>
-        <v-list-group value="sidebarRestBundle">
-            <v-list-tile slot="item">
-              <v-list-tile-action> <v-icon >help</v-icon> </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>rest-bundle</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon dark>keyboard_arrow_down</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <div v-for="(item,i) in sidebarRestBundle" :key="i">
-              <v-list-tile exact :to="item.href">
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                    <v-icon v-show='$route.path === item.href'>keyboard_arrow_right</v-icon>
-                </v-list-tile-action>
-              </v-list-tile>
-            </div>
-        </v-list-group>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed flat class="black" >
@@ -44,7 +23,7 @@
         <v-toolbar-title class="grey--text text--lighten-1">
             <div style="display:flex; flex-flow:column; ">
                 <span class="mr-2" >{{package.name}} {{package.version}}</span>
-                <span class="caption">developer application</span>
+                <span class="caption">OyaMist&trade; Bioreactor Console for Raspberry Pi</span>
             </div>
         </v-toolbar-title>
         <v-spacer/>
