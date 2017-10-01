@@ -7,6 +7,13 @@ const rb = require("rest-bundle");
 const OyaReactor = require("oya-vue").OyaReactor;
 const winston = require("winston");
 
+try {
+    var rpio = require('rpio');
+} catch (err) {
+    var rpio = null;
+    console.log("Could not load rpio. Hardware automation is disabled");
+}
+
 // ensure argv is actually for script instead of mocha
 var argv = process.argv[1].match(__filename) && process.argv || [];
 argv.filter(a => a==='--log-debug').length && (winston.level = 'debug');
@@ -30,6 +37,11 @@ let async = function*() {
         for (var iService = 0; iService < services.length; iService++) {
             var serviceName = services[iService];
             var oya = new OyaReactor(serviceName);
+            if (rpio) {
+                oya.emitter.on(OyaReactor.EVENT_RELAY, (value, pin) => {
+                    rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
+                });
+            }
             restBundles.push(oya);
         }
 
