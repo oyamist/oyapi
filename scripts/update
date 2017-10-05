@@ -1,6 +1,9 @@
 #!/bin/bash
 
+echo -e "UPDATE\t: Retrieving latest github content..."
 git pull
+echo -e "UPDATE\t: Installing dependencies..."
 npm install
+echo -e "UPDATE\t: Building web server..."
 npm run build
 
