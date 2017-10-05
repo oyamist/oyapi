@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "oya-vue": "^0.2.3",
-    "rimraf": "^2.6.1",
-    "rpio": "^0.9.17"
+    "rimraf": "^2.6.2",
+    "rpio": "^0.9.18"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
