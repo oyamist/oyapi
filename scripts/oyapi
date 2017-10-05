@@ -2,4 +2,4 @@
 OYAPI=/home/pi/github/oyapi
 
 pushd $OYAPI
-npm start oyapi 2>&1 | tee oyapi.log
+npm start 2>&1 | tee oyapi.log

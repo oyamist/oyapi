@@ -11,14 +11,21 @@ if [ ! -e /etc/rc2.d/S50oyapi ]; then
     done
     if [ "$LAUNCH" == "y" ]; then
         echo -e "UPDATE\t: sudo ln -s `pwd`/scripts/oyapi /etc/rc2.d/S50oyapi"
-        sudo ln -s `pwd`/scripts/oyapi /etc/rc2.d/S50oyapi
+        sudo cp scripts/oyapi /etc/init.d
+        sudo ln -s /etc/init.d/oyapi /etc/rc2.d/S50oyapi
+        sync
     fi
 fi
 
 echo -e "UPDATE\t: Retrieving latest github content..."
 git pull
+sync
+
 echo -e "UPDATE\t: Installing dependencies..."
 npm install
+sync
+
 echo -e "UPDATE\t: Building web server..."
 npm run build
+sync
 
