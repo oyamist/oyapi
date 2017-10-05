@@ -1,0 +1,5 @@
+#!/bin/bash
+OYAPI=/home/pi/github/oyapi
+
+pushd $OYAPI
+npm start 2>&1 oyapi.log

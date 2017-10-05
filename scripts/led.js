@@ -12,30 +12,39 @@ const CMD_UPDATE = 0x16;
 const CMD_RESET = 0x17;
 
 rpio.i2cBegin();
-//rpio.i2cSetBaudRate(100000);    /* 100kHz */
+rpio.i2cSetBaudRate(10000);    /* 10kHz for 10m cables */
 
-rpio.i2cSetSlaveAddress(I2C_ADDRESS);
+var rc = rpio.i2cSetSlaveAddress(I2C_ADDRESS);
+console.log(`set slave address => ${rc}`);
 
 // enable()
-rpio.i2cWrite(Buffer([CMD_ENABLE_OUTPUT, 0x01]));
+var rc = rpio.i2cWrite(Buffer([CMD_ENABLE_OUTPUT, 0x01]));
+console.log(`write buffer => ${rc}`);
 
 // enable_leds(mask);
-rpio.i2cWrite(Buffer([CMD_ENABLE_LEDS, 0x3f, 0x3f, 0x3f]));
-rpio.i2cWrite(Buffer([CMD_UPDATE, 0xFF]));
+var rc = rpio.i2cWrite(Buffer([CMD_ENABLE_LEDS, 0x3f, 0x3f, 0x3f]));
+console.log(`write buffer => ${rc}`);
+var rc = rpio.i2cWrite(Buffer([CMD_UPDATE, 0xFF]));
+console.log(`write buffer => ${rc}`);
     
 // output(pwm[18])
-rpio.i2cWrite(Buffer([CMD_SET_PWM_VALUES, 
-	0x00, 0x00, 0x00,  // ADC1,0,3
-	0x00, 0x00, 0x00,  // OUTPUT1,0,3
-	0x00, 0x00, 0x00,  // INPUT1,0,3
-	0x00, 0x00,  		// RELAY1 NO NC	
-	0x00, 0x00,  		// RELAY2 NO NC	
-	0x00, 0x00,  		// RELAY3 NO NC	
-	0x02, 0x00, 0x02,  // WARN(R), COMMS(B), POWER(G)
+var rc = rpio.i2cWrite(Buffer([CMD_SET_PWM_VALUES, 
+	0x02, 0x00, 0x00,  // ADC1,0,3
+	0x02, 0x00, 0x00,  // OUTPUT1,0,3
+	0x02, 0x00, 0x00,  // INPUT1,0,3
+	0x02, 0x00,  		// RELAY1 NO NC	
+	0x02, 0x00,  		// RELAY2 NO NC	
+	0x02, 0x00,  		// RELAY3 NO NC	
+	0x10, 0x00, 0x10,  // WARN(R), COMMS(B), POWER(G)
 ]));
-rpio.i2cWrite(Buffer([CMD_UPDATE, 0xFF]));
+console.log(`write buffer => ${rc}`);
+var rc = rpio.i2cWrite(Buffer([CMD_UPDATE, 0xFF]));
+console.log(`write buffer => ${rc}`);
 
 setTimeout(() => {
+	// enable_leds(mask);
+	rpio.i2cWrite(Buffer([CMD_ENABLE_LEDS, 0x00, 0x00, 0x00]));
+	rpio.i2cWrite(Buffer([CMD_UPDATE, 0xFF]));
 	rpio.i2cEnd();
 	console.log("TEST\t: SN3218 LED test done");
 }, 5000);

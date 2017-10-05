@@ -1,6 +1,6 @@
 <template>
 
-<oya-reactor service="test"></oya-reactor>
+<oya-reactor service="oyapi"></oya-reactor>
 
 </template><script>
 
