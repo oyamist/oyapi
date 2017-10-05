@@ -2,7 +2,8 @@
 
 if [ ! -e /etc/rc2.d/S50oyapi ]; then
     while true; do
-        read -p "UPDATE : Launch web server on power-up [y,n]:" LAUNCH
+        echo -e "UPDATE\t: Oyapi currently needs to be started manually"
+        read -p "UPDATE : Configure system to launch Oyapi automatically on power-up? [y,n]:" LAUNCH
         case $LAUNCH in
             [y]* ) break;;
             [n]* ) break;;
