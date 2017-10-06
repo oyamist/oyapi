@@ -60,7 +60,6 @@
 		write(value) {
 			this.value = !!value;
 			rpio.open(this.pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
-			console.log(`pin ${this.pin} ${this.value} ${this._auto_light} `);
 			this.no.light.enable(this._auto_light && !this.value);
 			this.nc.light.enable(this._auto_light && this.value);
 			if (value) {

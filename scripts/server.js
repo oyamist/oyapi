@@ -4,7 +4,7 @@ const path = require("path");
 const express = require('express');
 const app = module.exports = express();
 const rb = require("rest-bundle");
-const OyaReactor = require("oya-vue").OyaReactor;
+const OyaPi = require("../src/oyapi");
 const winston = require("winston");
 
 try {
@@ -36,9 +36,9 @@ let async = function*() {
         var services = ['test'].concat(argv.filter((a, i) => i>1 && a[0]!=='-' && a!=="test"));
         for (var iService = 0; iService < services.length; iService++) {
             var serviceName = services[iService];
-            var oya = new OyaReactor(serviceName);
+            var oya = new OyaPi(serviceName);
             if (rpio) {
-                oya.emitter.on(OyaReactor.EVENT_RELAY, (value, pin) => {
+                oya.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                     rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
                 });
             }
