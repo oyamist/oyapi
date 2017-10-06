@@ -37,11 +37,6 @@ let async = function*() {
         for (var iService = 0; iService < services.length; iService++) {
             var serviceName = services[iService];
             var oya = new OyaPi(serviceName);
-            if (rpio) {
-                oya.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
-                    rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
-                });
-            }
             restBundles.push(oya);
         }
 
