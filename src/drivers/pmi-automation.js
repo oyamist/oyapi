@@ -2,26 +2,88 @@
 
 (function(exports) {
     const rpio = require('rpio');
+	const winston = require("winston");
 
     class Light {
-        constructor(name, pmia) {
+        constructor(name, ahat) {
             this.name = name;
-            this.led = pmia.leds.length;
-            this.value = 255;
+            this.led = ahat.leds.length;
+            this.value = 1;
             this.enabled = false;
-            this.pmia = pmia;
+            this.ahat = ahat;
         }
+
+		enable(value=true) {
+			this.enabled = value;
+		}
 
         write(value) {
             this.value = Math.max(0, Math.min(value, 255));
-            this.pmia.updateLeds();
+            this.ahat.updateLeds();
         }
 
-        toggle() {
-            this.enabled = !this.enabled;
-            this.pmia.updateLeds();
+		on() {
+			this.enabled = true;
+            this.ahat.updateLeds();
+		}
+
+		off() {
+			this.enabled = false;
+            this.ahat.updateLeds();
+		}
+
+		toggle() {
+			if (this.enabled) {
+				this.off();
+			} else {
+				this.on();
+			}
         }
     }
+
+    class Relay {
+		constructor(name, pin) {
+			this.name = name;
+			this.nc = {};
+			this.no = {};
+			this._auto_light = true;
+			this.value = false;
+			this.pin = pin;
+		}
+
+		auto_light(value=true) {
+			this._auto_light = value;
+			this.nc.light.enable(value);
+			this.no.light.enable(value);
+		}
+
+		write(value) {
+			this.value = !!value;
+			rpio.open(this.pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
+			console.log(`pin ${this.pin} ${this.value} ${this._auto_light} `);
+			this.no.light.enable(this._auto_light && !this.value);
+			this.nc.light.enable(this._auto_light && this.value);
+			if (value) {
+				this.no.light.off();
+				this.nc.light.on();
+			} else {
+				this.no.light.on();
+				this.nc.light.off();
+			}
+		}
+
+		on() {
+			this.write(1);
+		}
+
+		off() {
+			this.write(0);
+		}
+
+		toggle() {
+			this.write(!this.value);
+		}
+	}
 
     // OyaPi Driver for Pimoroni Automation Hat
     class PmiAutomation {
@@ -45,25 +107,29 @@
                 three: {},
             };
             this.relay = {
-                one: {},
-                two: {},
-                three: {},
+                one: new Relay("RELAY1", 33),
+                two: new Relay("RELAY2", 35),
+                three: new Relay("RELAY3", 36),
             };
-            this.leds.push((this.analog.one.light = new Light("ADC1", this)));
-            this.leds.push((this.analog.two.light = new Light("ADC2", this));)
-            this.leds.push((this.analog.three.light = new Light("ADC3", this)));
-            this.leds.push((this.output.one.light = new Light("OUTPUT1", this)));
-            this.leds.push((this.output.two.light = new Light("OUTPUT2", this));)
-            this.leds.push((this.output.three.light = new Light("OUTPUT3", this)));
-            this.leds.push((this.input.one.light = new Light("INPUT1", this)));
-            this.leds.push((this.input.two.light = new Light("INPUT2", this)));
-            this.leds.push((this.input.three.light = new Light("INPUT3", this)));
-            this.leds.push((this.relay.one.light = new Light("RELAY1", this)));
-            this.leds.push((this.relay.two.light = new Light("RELAY2", this)));
-            this.leds.push((this.relay.three.light = new Light("RELAY3", this)));
+            this.leds.push((this.analog.one.light = new Light("ADC1", this))); // 0
+            this.leds.push((this.analog.two.light = new Light("ADC2", this))); // 1
+            this.leds.push((this.analog.three.light = new Light("ADC3", this))); // 2
+            this.leds.push((this.output.one.light = new Light("OUTPUT1", this))); // 3
+            this.leds.push((this.output.two.light = new Light("OUTPUT2", this))); // 4
+            this.leds.push((this.output.three.light = new Light("OUTPUT3", this))); // 5
+            this.leds.push((this.relay.one.no.light = new Light("RELAY1NO", this))); // 6
+            this.leds.push((this.relay.one.nc.light = new Light("RELAY1NC", this))); // 7
+            this.leds.push((this.relay.two.no.light = new Light("RELAY2NO", this))); // 8
+            this.leds.push((this.relay.two.nc.light = new Light("RELAY2NC", this))); // 9
+            this.leds.push((this.relay.three.no.light = new Light("RELAY3NO", this))); // 10
+            this.leds.push((this.relay.three.nc.light = new Light("RELAY3NC", this))); // 11
+            this.leds.push((this.input.three.light = new Light("INPUT3", this))); // 12
+            this.leds.push((this.input.two.light = new Light("INPUT2", this))); // 13
+            this.leds.push((this.input.one.light = new Light("INPUT1", this))); // 14
             this.leds.push((this.light.warn = new Light("WARN", this)));
             this.leds.push((this.light.comms = new Light("COMMS", this)));
             this.leds.push((this.light.power = new Light("POWER", this)));
+			this.enabled = false;
         }
 
         static get I2C_ADDRESS() { return 0x54; }
@@ -74,39 +140,45 @@
         static get CMD_RESET() { return 0x17; }
 
         enable(value = true) {
-            if (value) {
-                rpio.i2cBegin();
-                rpio.i2cSetBaudRate(this.baudRate);    
-                rpio.i2cSetSlaveAddress(I2C_ADDRESS);
-                rpio.i2cWrite(Buffer([CMD_ENABLE_OUTPUT, value ? 1 : 0]));
-            } else {
-                rpio.i2cEnd();
-            }
+			rpio.i2cBegin();
+			rpio.i2cSetBaudRate(this.baudRate);    
+			rpio.i2cSetSlaveAddress(PmiAutomation.I2C_ADDRESS);
+			rpio.i2cWrite(Buffer([PmiAutomation.CMD_ENABLE_OUTPUT, value ? 1 : 0]));
+			this.enabled = value;
         }
 
         updateLeds() {
-            var enable = [CMD_ENABLE_LEDS, 0, 0, 0];
-            var pwm = [CMD_UPDATE];
+            var enableLeds = [PmiAutomation.CMD_ENABLE_LEDS, 0x0, 0x0, 0x0];
+            var pwm = [PmiAutomation.CMD_SET_PWM_VALUES];
+			var mask = 0x20;
             this.leds.forEach((led, i) => {
-                var ienable = Math.trunc(i/6) + 1;
                 pwm.push(led.value);
-                enable[ienable] <<= 1;
+				if (i % 6 === 0) {
+					mask = 0x01;
+				}
                 if (led.enabled) {
-                    enable[ienable] |= 1;
+					var ienable = Math.trunc(i/6) + 1;
+                    enableLeds[ienable] |= mask;
                 }
+				mask <<= 1;
             });
 
-            rpio.i2cBegin();
-            rpio.i2cSetBaudRate(this.baudRate);    
-            rpio.i2cSetSlaveAddress(I2C_ADDRESS);
+			rpio.i2cBegin();
+			rpio.i2cSetBaudRate(this.baudRate);    
+			rpio.i2cSetSlaveAddress(PmiAutomation.I2C_ADDRESS);
+			rpio.i2cWrite(Buffer([PmiAutomation.CMD_ENABLE_OUTPUT, 1]));
 
-            var rc = rpio.i2cWrite(Buffer(enable));
+            var rc = rpio.i2cWrite(Buffer(enableLeds));
             if (rc) {
-                return false;
+				throw new Error("could not write i2c");
             }
             var rc = rpio.i2cWrite(Buffer(pwm));
             if (rc) {
-                return false;
+				throw new Error("could not write i2c");
+            }
+			var rc = rpio.i2cWrite(Buffer([PmiAutomation.CMD_UPDATE, 0xFF]));
+            if (rc) {
+				throw new Error("could not write i2c");
             }
         }
     
@@ -114,3 +186,124 @@
 
     module.exports = exports.PmiAutomation = PmiAutomation;
 })(typeof exports === "object" ? exports : (exports = {}));
+
+
+(typeof describe === 'function') && describe("PmiAutomation", function() {
+	const should = require('should');
+	const winston = require("winston");
+	const PmiAutomation = exports.PmiAutomation;
+	winston.level =  'debug';
+
+    const rpio = require('rpio');
+
+	it("turns on an led", function(done) {
+		this.timeout(10000);
+		var async = function*(){
+			try {
+				var ahat = new PmiAutomation();
+				var ms = 50;
+				ahat.enable();
+				ahat.analog.one.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.analog.two.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.analog.three.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.output.one.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.output.two.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.output.three.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.input.one.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.input.two.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.input.three.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.one.no.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.one.nc.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.two.no.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.two.nc.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.three.no.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.three.nc.light.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.light.warn.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.light.comms.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.light.power.on();
+				yield setTimeout(()=>async.next(), ms);
+
+				var level = 20;
+				ahat.analog.one.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.analog.two.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.analog.three.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.output.one.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.output.two.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.output.three.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.input.one.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.input.two.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.input.three.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.one.no.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.one.nc.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.two.no.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.two.nc.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.three.no.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.three.nc.light.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.light.warn.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.light.comms.write(level);
+				yield setTimeout(()=>async.next(), ms);
+				ahat.light.power.write(level);
+				yield setTimeout(()=>async.next(), ms);
+
+				ahat.leds.forEach(led => led.toggle());
+				yield setTimeout(()=>async.next(), 500);
+				ahat.leds.forEach(led => led.toggle());
+				yield setTimeout(()=>async.next(), 500);
+
+				ms = 500;
+				ahat.relay.one.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.two.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.three.on();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.one.off();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.two.off();
+				yield setTimeout(()=>async.next(), ms);
+				ahat.relay.three.off();
+				yield setTimeout(()=>async.next(), ms);
+
+				ahat.enable(false);
+				done();
+			} catch (err) {
+				winston.warn(err.stack);
+			}
+		}();
+		async.next();
+	});
+
+});
