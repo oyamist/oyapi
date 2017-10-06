@@ -13,7 +13,7 @@
                 srcPkg,
             }, opts));
             if (rpio) {
-                oya.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
+                this.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                     rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
                 });
             }
