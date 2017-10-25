@@ -7,8 +7,21 @@
 	winston.level =  'debug';
 
     const rpio = require('rpio');
+    if (!rpio.hasOwnProperty('isMock')) {
+        rpio.isMock = false;
+        rpio.on('warn', (msg) => {
+            console.log("WARNING", msg);
+            rpio.isMock = true;
+        });
+        rpio.init();
+    }
+    console.log("isMock", rpio.isMock);
 
 	it("turns on an led", function(done) {
+        if (rpio.isMock) {
+            done();
+            return;
+        }
 		this.timeout(10000);
 		var async = function*(){
 			try {
@@ -104,6 +117,10 @@
 		async.next();
 	});
 	it("turns on a relay", function(done) {
+        if (rpio.isMock) {
+            done();
+            return;
+        }
 		this.timeout(10000);
 		var async = function*(){
 			try {
