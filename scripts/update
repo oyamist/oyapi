@@ -20,6 +20,10 @@ fi
 
 echo -e "UPDATE\t: Retrieving latest github content..."
 git pull
+RC=$?; if [ "$RC" != "0" ]; then 
+    echo -e "ERROR\t: Could not update"
+    exit $RC
+fi
 sync
 
 echo -e "UPDATE\t: Installing dependencies..."
