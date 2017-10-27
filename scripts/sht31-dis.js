@@ -5,21 +5,18 @@ var sht31 = new Sensor(Sensor.TYPE_SHT31_DIS);
 
 console.log("TEST\t: SHT31-DIS Temperature and Humidity Sensor Test");
 
-const I2C_ADDRESS = sht31.address;
-const BYTES_DATA_RESPONSE = 6;
-
 rpio.i2cBegin();
 rpio.i2cSetBaudRate(10000);    /* 10kHz for 10m cables */
-rpio.i2cSetSlaveAddress(I2C_ADDRESS);
+rpio.i2cSetSlaveAddress(sht31.address);
 
 for (var ia in process.argv) {
 	if (process.argv[ia] === '-W') {
-		//var rc = rpio.i2cWrite(Buffer(sht31.heater.on)); // heater on
+		var rc = rpio.i2cWrite(Buffer(sht31.heater.on)); // heater on
 		console.log(`TEST\t: heater on i2cWrite => ${rc}`);
 		rpio.sleep(1);
 	}
 	if (process.argv[ia] === '-w') {
-		//var rc = rpio.i2cWrite(Buffer(sht31.heater.off)); // heater off
+		var rc = rpio.i2cWrite(Buffer(sht31.heater.off)); // heater off
 		console.log(`TEST\t: heater off i2cWrite => ${rc}`);
 		rpio.sleep(1);
 	}
