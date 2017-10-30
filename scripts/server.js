@@ -8,7 +8,7 @@ const rb = require("rest-bundle");
 const OyaPi = require("../src/oyapi");
 const winston = require("winston");
 
-express.use(compression());
+app.use(compression());
 
 try {
     var rpio = require('rpio');
