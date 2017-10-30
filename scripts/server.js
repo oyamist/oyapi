@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
 const path = require("path");
+const compression = require('compression');
 const express = require('express');
 const app = module.exports = express();
 const rb = require("rest-bundle");
 const OyaPi = require("../src/oyapi");
 const winston = require("winston");
+
+express.use(compression());
 
 try {
     var rpio = require('rpio');
