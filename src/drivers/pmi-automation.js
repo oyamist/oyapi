@@ -15,6 +15,7 @@
 
 		enable(value=true) {
 			this.enabled = value;
+            this.ahat.updateLeds();
 		}
 
         write(value) {
@@ -23,13 +24,11 @@
         }
 
 		on() {
-			this.enabled = true;
-            this.ahat.updateLeds();
+			this.enable(true);
 		}
 
 		off() {
-			this.enabled = false;
-            this.ahat.updateLeds();
+			this.enable(false);
 		}
 
 		toggle() {
