@@ -4,6 +4,7 @@
     const srcPkg = require("../package.json");
     const OyaReactor = require("oya-vue").OyaReactor;
     const OyaConf = require("oya-vue").OyaConf;
+    const PmiAutomation = require("drivers/pmi-automation");
     const path = require("path");
     const rpio = require("rpio");
 
@@ -13,7 +14,11 @@
                 srcPkg,
             }, opts));
             if (rpio) {
+                var ahat = this.ahat = new PmiAutomation();
+                ahat.enable();
+                ahat.light.power.write(127);
                 this.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
+                    ahat.light.power.enable(value);
                     rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
                 });
             }
