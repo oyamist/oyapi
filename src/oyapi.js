@@ -78,6 +78,18 @@
                 }
             });
         }
+
+		init_sensors() {
+			var sensors = this.oyaConf.sensors.filter(s=>(s.type !== Sensor.TYPE_NONE.type));
+			console.log(`sensors`, JSON.stringify(this.sensors));
+		}
+
+        onApiModelLoaded() {
+            super.onApiModelLoaded();
+            winston.info("OyaPi onApiModelLoaded");
+            this.init_sensors();
+        }
+
     } //// class OyaPi
 
     module.exports = exports.OyaPi = OyaPi;
