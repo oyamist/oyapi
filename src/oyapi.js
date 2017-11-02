@@ -37,7 +37,6 @@
                 i2cWrite,
                 i2cRead,
             }, opts));
-            var self = this;
             if (rpio) {
                 this.init_rpio();
             } else {
@@ -46,6 +45,7 @@
         }
 
         init_rpio() {
+            var self = this;
             winston.info("rpio available. Setting up PiMoroni Automation Hat...");
             var ahat = self.ahat = new PmiAutomation();
             ahat.enable();
