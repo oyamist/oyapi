@@ -34,3 +34,12 @@ echo -e "UPDATE\t: Building web server..."
 npm run build
 sync
 
+while true; do
+    echo -e "UPDATE\t: Oyapi update requires a reboot"
+    read -p "UPDATE  : Reboot now? [y,n]:" REBOOT
+    case $REBOOT in
+        [y]* ) sudo shutdown -r now; break;;
+        [n]* ) break;;
+           * ) echo "        : Please enter 'y' or 'n'";;
+    esac
+done
