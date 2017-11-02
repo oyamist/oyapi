@@ -22,9 +22,14 @@
                 var ahat = this.ahat = new PmiAutomation();
                 ahat.enable();
                 ahat.light.power.write(127);
-                ahat.light.power.enable();
                 ahat.light.comms.write(127);
+                ahat.light.warn.write(127);
+                ahat.light.power.enable();
                 ahat.light.comms.enable();
+                ahat.light.warn.enable();
+                setTimeout(() => ahat.light.power.enable(false), 500);
+                setTimeout(() => ahat.light.comm.enable(false), 1000);
+                setTimeout(() => ahat.light.warn.enable(false), 1500);
                 this.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                     ahat.light.power.enable(value);
                     rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
@@ -35,8 +40,10 @@
                     var pinState = rpio.read(pin);
                     var state = pinState ? 'pressed' : 'released' ;
                     if (curState !== state) {
-                        curState && winston.info(`Priming mist system`);
-                        this.vessel.setCycle(OyaVessel.CYCLE_PRIME);
+                        if (curState) {
+                            winston.info(`Priming mist system`);
+                            this.vessel.setCycle(OyaVessel.CYCLE_PRIME);
+                        }
                         curState = state;
                         ahat.light.comms.enable(pinState);
                         count++;
