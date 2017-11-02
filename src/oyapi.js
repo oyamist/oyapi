@@ -29,7 +29,7 @@
                 ahat.light.comms.enable();
                 ahat.light.warn.enable();
                 setTimeout(() => ahat.light.power.enable(false), 500);
-                setTimeout(() => ahat.light.comm.enable(false), 1000);
+                setTimeout(() => ahat.light.comms.enable(false), 1000);
                 setTimeout(() => ahat.light.warn.enable(false), 1500);
                 self.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                     ahat.light.power.enable(value);
@@ -49,7 +49,7 @@
                         ahat.light.comms.enable(pinState);
                         count++;
                     }
-                }
+                });
             } else {
                 winston.info("rpio not available.");
             }
