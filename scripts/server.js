@@ -36,12 +36,12 @@ let async = function*() {
     try {
         // define RestBundles
         var restBundles = app.locals.restBundles = [];
-        var services = ['test'].concat(argv.filter((a, i) => i>1 && a[0]!=='-' && a!=="test"));
-        for (var iService = 0; iService < services.length; iService++) {
-            var serviceName = services[iService];
-            var oya = new OyaPi(serviceName);
+        //var services = ['test'].concat(argv.filter((a, i) => i>1 && a[0]!=='-' && a!=="test"));
+        //for (var iService = 0; iService < services.length; iService++) {
+            //var serviceName = services[iService];
+            var oya = new OyaPi("OyaPi");
             restBundles.push(oya);
-        }
+        //}
 
         // declare ports
         var isTesting = module.parent != null && false;
