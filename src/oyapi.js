@@ -4,6 +4,7 @@
     const srcPkg = require("../package.json");
     const OyaReactor = require("oya-vue").OyaReactor;
     const OyaVessel = require("oya-vue").OyaVessel;
+    const Sensor = require("oya-vue").Sensor;
     const OyaConf = require("oya-vue").OyaConf;
     const PmiAutomation = require("./drivers/pmi-automation");
     const path = require("path");
@@ -80,8 +81,8 @@
         }
 
 		init_sensors() {
-			var sensors = this.oyaConf.sensors.filter(s=>(s.type !== Sensor.TYPE_NONE.type));
-			console.log(`sensors`, JSON.stringify(this.sensors));
+			var sensors = this.oyaConf.sensors.filter(s=> (s.type !== Sensor.TYPE_NONE.type));
+			console.log(`sensors`, JSON.stringify(sensors), typeof sensors[0].emit);
 		}
 
         onApiModelLoaded() {
