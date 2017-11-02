@@ -1,5 +1,18 @@
 #!/bin/bash
 
+REBOOT=0
+OPTIND=1
+while getopts "r" opt; do
+    case "$opt" in
+    r)  REBOOT=1
+        ;;
+    esac
+done
+shift $((OPTIND-1))
+[ "$1" = "--" ] && shift
+
+echo reboot $REBOOT
+
 if [ ! -e /etc/rc2.d/S50oyapi ]; then
     while true; do
         echo -e "UPDATE\t: Oyapi currently needs to be started manually"
@@ -38,6 +51,10 @@ sync
 echo -e "UPDATE\t: Building web server..."
 npm run build
 sync
+
+if [ "$REBOOT" == "1" ]; then
+    sudo shutdown -r now
+fi
 
 while true; do
     echo -e "UPDATE\t: Oyapi update requires a reboot"
