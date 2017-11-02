@@ -1,7 +1,7 @@
 <template>
 
 <v-app id="dev-app" >
-   <v-navigation-drawer persistent light v-model="drawer" light>
+   <v-navigation-drawer persistent light v-model="drawer" enable-resize-watcher app>
       <v-list dense>
         <div v-for="(item,i) in sidebarMain" :key="i">
           <v-list-tile exact :to="item.href">
