@@ -80,15 +80,28 @@
             });
         }
 
-		init_sensors() {
-			var sensors = this.oyaConf.sensors.filter(s=> (s.type !== Sensor.TYPE_NONE.type));
-			sensors[0] && console.log(`sensors`, JSON.stringify(sensors), typeof sensors[0].emit);
+		process_sensors() {
+			this.oyaConf.sensors.forEach(s=> {
+                if (s.type !== Sensor.TYPE_NONE.type) {
+                    s.i2cRead = i2cRead;
+                    s.i2cWrite = i2cWrite;
+                    s.emitter = this.vessel.emitter;
+                    s.read().then(r=>{
+                        winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
+                    }).catch(e=>{
+                        winston.error(`sensor ${s.name}`, e);
+                    });
+                }
+            });
 		}
 
         onApiModelLoaded() {
             super.onApiModelLoaded();
             winston.info("OyaPi onApiModelLoaded");
-            this.init_sensors();
+            var self = this;
+            setInterval(() => {
+                self.process_sensors();
+            }, 1000);
         }
 
     } //// class OyaPi
