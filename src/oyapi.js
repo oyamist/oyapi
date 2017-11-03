@@ -82,7 +82,7 @@
 
 		init_sensors() {
 			var sensors = this.oyaConf.sensors.filter(s=> (s.type !== Sensor.TYPE_NONE.type));
-			console.log(`sensors`, JSON.stringify(sensors), typeof sensors[0].emit);
+			sensors[0] && console.log(`sensors`, JSON.stringify(sensors), typeof sensors[0].emit);
 		}
 
         onApiModelLoaded() {
