@@ -9,7 +9,7 @@
     "src": "src"
   },
   "dependencies": {
-    "oya-vue": "^0.6.2",
+    "oya-vue": "^0.6.7",
     "rimraf": "^2.6.2",
     "rpio": "^0.9.18"
   },
@@ -31,7 +31,7 @@
     "build:vue": "npm run build:vue-dev ",
     "build:vue-dev": "cross-env NODE_ENV=production webpack --config cfg/webpack.dev.js --progress --hide-modules",
     "clean": "rm -f *.log*; rimraf dist; rimraf .motion",
-    "dev": "concurrently \"scripts/server.js test aloha\" \"npm run dev:vue\"",
+    "dev": "concurrently \"scripts/server.js test \" \"npm run dev:vue\"",
     "dev:debug": "concurrently \"scripts/server.js --log-debug test aloha\" \"npm run dev:vue\"",
     "dev:vue": "cross-env NODE_ENV=development webpack-dev-server --config cfg/webpack.dev.js --hot",
     "start": "scripts/server.js oyapi",

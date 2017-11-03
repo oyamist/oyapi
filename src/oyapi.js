@@ -15,7 +15,7 @@
         rpio.i2cSetBaudRate(10000);    /* 10kHz for 10m cables */
         rpio.i2cSetSlaveAddress(adr);
         var rc = rpio.i2cWrite(buf);
-        winston.info(`i2cWrite => ${rc}`);
+        rc && winston.warn(`i2cWrite(${adr}) => ${rc}`);
         rpio.i2cEnd();
     }
 
@@ -25,6 +25,7 @@
         rpio.i2cSetSlaveAddress(adr);
         rpio.msleep(15);
         var rc = rpio.i2cRead(inBuf);
+        rc && winston.warn(`i2cRead(${adr}) => ${rc}`);
         rpio.i2cEnd();
     }
 
@@ -81,18 +82,28 @@
         }
 
 		process_sensors() {
-			this.oyaConf.sensors.forEach(s=> {
-                if (s.type !== Sensor.TYPE_NONE.type) {
-                    s.i2cRead = i2cRead;
-                    s.i2cWrite = i2cWrite;
-                    s.emitter = this.vessel.emitter;
-                    s.read().then(r=>{
-                        winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
-                    }).catch(e=>{
-                        winston.error(`sensor ${s.name}`, e);
-                    });
-                }
-            });
+            try {
+                this.oyaConf.sensors.forEach(s=> {
+                    if (s.type !== Sensor.TYPE_NONE.type) {
+                        s.i2cRead = i2cRead;
+                        s.i2cWrite = i2cWrite;
+                        s.emitter = this.vessel.emitter;
+                        const MAX_READ_ERRORS = 5;
+                        if (s.readErrors < MAX_READ_ERRORS) {
+                            s.read().then(r=>{
+                                winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
+                            }).catch(e=>{
+                                winston.error(`read error #${s.readErrors} sensor ${s.name}`, e);
+                                if (s.readErrors === MAX_READ_ERRORS) {
+                                    winston.error(`sensor ${s.name}/${s.loc} disabled (too many errors)`);
+                                }
+                            });
+                        }
+                    }
+                });
+            } catch (e) {
+                winston.error(`process_sensors error sensor ${s.name}`, e);
+            }
 		}
 
         onApiModelLoaded() {
