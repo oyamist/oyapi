@@ -153,7 +153,7 @@
             } while(rc && --maxErrs > 0);
             rpio.i2cEnd();
             if (rc) {
-				this.fault = new Error(`PmiAutomation.i2cWrite failed after ${this.maxErrs) tries`);
+				this.fault = new Error(`PmiAutomation.i2cWrite failed after ${this.maxErrs} tries`);
                 winston.error(this.fault);
                 if (this.i2cFatal) {
                     throw this.fault;
