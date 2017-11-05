@@ -87,6 +87,8 @@
     class PmiAutomation {
         constructor(opts = {}) {
             this.baudRate = opts.baudRate || 10000; /* 10kHz for 10m cables */
+            this.maxErrs = opts.maxErrs || 3;
+            this.i2cFatal = opts.i2cFatal || false;
             this.leds = [];
             this.light = {};
             this.analog = {
@@ -138,11 +140,25 @@
         static get CMD_RESET() { return 0x17; }
 
         enable(value = true) {
+			this.i2cWrite(Buffer([PmiAutomation.CMD_ENABLE_OUTPUT, value ? 1 : 0]));
+			this.enabled = value;
+        }
+
+        i2cWrite(buf, maxErrs=this.maxErrs) {
 			rpio.i2cBegin();
 			rpio.i2cSetBaudRate(this.baudRate);    
 			rpio.i2cSetSlaveAddress(PmiAutomation.I2C_ADDRESS);
-			rpio.i2cWrite(Buffer([PmiAutomation.CMD_ENABLE_OUTPUT, value ? 1 : 0]));
-			this.enabled = value;
+            do {
+                var rc = rpio.i2cWrite(buf);
+            } while(rc && --maxErrs > 0);
+            rpio.i2cEnd();
+            if (rc) {
+				this.fault = new Error(`PmiAutomation.i2cWrite failed after ${this.maxErrs) tries`);
+                winston.error(this.fault);
+                if (this.i2cFatal) {
+                    throw this.fault;
+                }
+            }
         }
 
         updateLeds() {
@@ -161,23 +177,10 @@
 				mask <<= 1;
             });
 
-			rpio.i2cBegin();
-			rpio.i2cSetBaudRate(this.baudRate);    
-			rpio.i2cSetSlaveAddress(PmiAutomation.I2C_ADDRESS);
-			rpio.i2cWrite(Buffer([PmiAutomation.CMD_ENABLE_OUTPUT, 1]));
-
-            var rc = rpio.i2cWrite(Buffer(enableLeds));
-            if (rc) {
-				throw new Error("could not write i2c");
-            }
-            var rc = rpio.i2cWrite(Buffer(pwm));
-            if (rc) {
-				throw new Error("could not write i2c");
-            }
-			var rc = rpio.i2cWrite(Buffer([PmiAutomation.CMD_UPDATE, 0xFF]));
-            if (rc) {
-				throw new Error("could not write i2c");
-            }
+			this.i2cWrite(Buffer([PmiAutomation.CMD_ENABLE_OUTPUT, 1]));
+            this.i2cWrite(Buffer(enableLeds));
+            this.i2cWrite(Buffer(pwm));
+			this.i2cWrite(Buffer([PmiAutomation.CMD_UPDATE, 0xFF]));
         }
     
     } // class PmiAutomation
