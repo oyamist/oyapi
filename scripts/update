@@ -35,6 +35,7 @@ echo -e "UPDATE\t: Retrieving latest github content..."
 git pull &> /tmp/git.log
 RC=$?; if [ "$RC" != "0" ]; then 
     echo -e "ERROR\t: Could not update"
+    cat /tmp/git.log
     exit $RC
 fi
 grep Already /tmp/git.log
