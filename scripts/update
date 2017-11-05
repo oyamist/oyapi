@@ -32,7 +32,7 @@ if [ ! -e /etc/rc2.d/S50oyapi ]; then
 fi
 
 echo -e "UPDATE\t: Retrieving latest github content..."
-git pull | tee /tmp/git.log
+git pull &> /tmp/git.log
 RC=$?; if [ "$RC" != "0" ]; then 
     echo -e "ERROR\t: Could not update"
     exit $RC
