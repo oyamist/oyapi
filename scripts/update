@@ -11,8 +11,6 @@ done
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
-echo reboot $REBOOT
-
 if [ ! -e /etc/rc2.d/S50oyapi ]; then
     while true; do
         echo -e "UPDATE\t: Oyapi currently needs to be started manually"
