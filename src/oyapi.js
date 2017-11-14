@@ -93,7 +93,7 @@
                             s.read().then(r=>{
                                 winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
                             }).catch(e=>{
-                                winston.error(`read error #${s.readErrors} sensor ${s.name}`, e);
+                                winston.info(`read error #${s.readErrors} sensor ${s.name}`, e);
                                 if (s.readErrors === MAX_READ_ERRORS) {
                                     winston.error(`sensor ${s.name}/${s.loc} disabled (too many errors)`);
                                 }
