@@ -9,7 +9,7 @@
     "src": "src"
   },
   "dependencies": {
-    "oya-vue": "^0.8.4",
+    "oya-vue": "^0.8.5",
     "rimraf": "^2.6.2",
     "rpio": "^0.9.18"
   },
