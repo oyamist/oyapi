@@ -20,7 +20,18 @@ else
     echo -e "INSTALL\t: Cassandra (`cqlsh --version`) installed => OK"
 fi
 
+service cassandra status >& /dev/null
+RC=$?
+if [ "$RC" == "0" ]; then
+    echo -e "INSTALL\t: Cassandra service is already running => OK"
+else
+    echo -e "INSTALL\t: starting Cassandra service..."
+    sudo service cassandra start
+    sleep 10
+fi
+
 echo -e "INSTALL\t: creating oyamist keyspace and tables"
 cqlsh -f create.cql
+
 
 echo -e "END\t: $0 `date`"
