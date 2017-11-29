@@ -6,7 +6,7 @@
     const OyaVessel = require("oya-vue").OyaVessel;
     const Sensor = require("oya-vue").Sensor;
     const OyaConf = require("oya-vue").OyaConf;
-    const SQLite3 = require('sqlite3');
+    const SQLite3 = require('sqlite3').verbose();
     const PmiAutomation = require("./drivers/pmi-automation");
     const path = require("path");
     const rpio = require("rpio");
@@ -64,7 +64,7 @@
             var hh = ('0'+date.getHours()).slice(-2);
             var mm = ('0'+date.getMinutes()).slice(-2);
             var ss = ('0'+date.getSeconds()).slice(-2);
-            var stmt = `insert into sensor(vessel,evt,d,t,v) values(` +
+            var stmt = `insert into sensordata(vessel,evt,d,t,v) values(` +
                 `'${vessel}',` +
                 `'${evt}',` +
                 `'${yyyy}-${mo}-${dd}',` +
