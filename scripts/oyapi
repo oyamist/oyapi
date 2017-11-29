@@ -5,12 +5,4 @@ pushd $OYAPI
 
 rm -f oyapi.log
 
-service cassandra status >& /dev/null
-RC=$?;if [ "$RC" == "0" ]; then
-    echo -e "OYAPI\t: Cassandra is already running => OK" | tee -a oyapi.log
-else
-    echo -e "OYAPI\t: Launching Cassandra..." | tee -a oyapi.log
-    sudo service cassandra start
-fi
-
 npm start 2>&1 | tee -a oyapi.log
