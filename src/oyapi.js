@@ -48,7 +48,8 @@
             var vessel = this.vessel;
             vessel.emitter.on(OyaVessel.SENSE_TEMP_INTERNAL, v=>{
                 try {
-                    var stmt = OyaPi.sql_sensor_insert(vessel.name, OyaVessel.SENSE_TEMP_INTERNAL, v);
+                    var date = new Date();
+                    var stmt = OyaPi.sql_sensor_insert(vessel.name, date, OyaVessel.SENSE_TEMP_INTERNAL, v);
                     winston.info(`sql ${stmt}`);
                 } catch (e) {
                     winston.error('sql', e.stack);
