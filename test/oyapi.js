@@ -3,8 +3,7 @@
 	const winston = require("winston");
 	const OyaPi = require("../index").OyaPi;
 	const OyaVessel = require("../index").OyaVessel;
-    const Cassandra = require("cassandra-driver");
-    const cql = new Cassandra.Client({ contactPoints:['127.0.0.1'], keyspace: 'oyamist' });
+    const SQLite3 = require('sqlite3');
 
     winston.level =  'debug';
 
@@ -19,22 +18,21 @@
     }
     console.log("isMock", rpio.isMock);
 
-    it("cql_sensor_insert(ts, evt, value) returns cql insert statement", function() {
+    it("sql_sensor_insert(ts, evt, value) returns cql insert statement", function() {
         var ts = new Date(2017,2,9,12,34,56);
-        var stmt = OyaPi.cql_sensor_insert('oyamist01', ts, OyaVessel.SENSE_TEMP_INTERNAL, 12.34);
+        var stmt = OyaPi.sql_sensor_insert('oyamist01', ts, OyaVessel.SENSE_TEMP_INTERNAL, 12.34);
         stmt.should.equal("insert into sensor(vessel,evt,d,t,v) values(" +
             "'oyamist01','sense: temp-internal','2017-03-09','12:34:56',12.34);");
     });
-	it("cql", function(done) {
-        const query = 'SELECT * FROM sensor ';
-        console.log("cql", query);
-        cql.execute(query)
-            .then(r => {
-                console.log('cql ok:', r.first());
-                done();
-            }).catch(e=>{
-                console.log('cql err:', e.stack);
-                done(e)
+    it("sqlite3 uses oyamist.db", function(done) {
+        try {
+            var db = new SQLite3.Database('./oyamist.db', SQLite3.OPEN_READWRITE, e=>{
+                e && done(e) ||
+                    db.close(e=>(e && done(e) || done()));
             });
+        } catch(e) {
+            winston.error(e.stack);
+            done(e);
+        }
     });
 });

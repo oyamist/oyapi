@@ -6,8 +6,7 @@
     const OyaVessel = require("oya-vue").OyaVessel;
     const Sensor = require("oya-vue").Sensor;
     const OyaConf = require("oya-vue").OyaConf;
-    const Cassandra = require("cassandra-driver");
-    const cql = new Cassandra.Client({ contactPoints:['127.0.0.1'], keyspace: 'oyamist' });
+    const SQLite3 = require('sqlite3');
     const PmiAutomation = require("./drivers/pmi-automation");
     const path = require("path");
     const rpio = require("rpio");
@@ -53,7 +52,7 @@
             });
         }
 
-        static cql_sensor_insert(vessel, date, evt, value) {
+        static sql_sensor_insert(vessel, date, evt, value) {
             var yyyy = date.getFullYear();
             var mo = ('0'+(date.getMonth()+1)).slice(-2);
             var dd = ('0'+date.getDate()).slice(-2);
