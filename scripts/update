@@ -47,7 +47,7 @@ echo -e "UPDATE\t: Installing dependencies..."
 npm install
 sync
 
-`dirname $0`/scripts/cassandra-install.sh
+`dirname $0`/cassandra-install.sh
 
 echo -e "UPDATE\t: Building web server..."
 npm run build
