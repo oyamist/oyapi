@@ -6,6 +6,8 @@
     const OyaVessel = require("oya-vue").OyaVessel;
     const Sensor = require("oya-vue").Sensor;
     const OyaConf = require("oya-vue").OyaConf;
+    const Cassandra = require("cassandra-driver");
+    const cql = new Cassandra.Client({ contactPoints:['127.0.0.1'], keyspace: 'oyamist' });
     const PmiAutomation = require("./drivers/pmi-automation");
     const path = require("path");
     const rpio = require("rpio");
@@ -44,6 +46,28 @@
             } else {
                 winston.info("rpio not available.");
             }
+            var vessel = this.vessel;
+            vessel.emitter.on(OyaVessel.SENSE_TEMP_INTERNAL, v=>{
+                var stmt = OyaPi.cql_sensor_insert(vessel.name, OyaVessel.SENSE_TEMP_INTERNAL, v);
+                console.log(`cql ${stmt}`);
+            });
+        }
+
+        static cql_sensor_insert(vessel, date, evt, value) {
+            var yyyy = date.getFullYear();
+            var mo = ('0'+(date.getMonth()+1)).slice(-2);
+            var dd = ('0'+date.getDate()).slice(-2);
+            var hh = ('0'+date.getHours()).slice(-2);
+            var mm = ('0'+date.getMinutes()).slice(-2);
+            var ss = ('0'+date.getSeconds()).slice(-2);
+            var stmt = `insert into sensor(vessel,evt,d,t,v) values(` +
+                `'${vessel}',` +
+                `'${evt}',` +
+                `'${yyyy}-${mo}-${dd}',` +
+                `'${hh}:${mm}:${ss}',` +
+                `${value}` +
+                ');';
+            return stmt;
         }
 
         init_rpio() {

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "cassandra-driver": "^3.3.0",
-    "oya-vue": "^0.8.5",
+    "oya-vue": "^0.8.6",
     "rimraf": "^2.6.2",
     "rpio": "^0.9.18"
   },
