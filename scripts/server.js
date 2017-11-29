@@ -9,6 +9,7 @@ const OyaPi = require("../src/oyapi");
 const winston = require("winston");
 
 app.use(compression());
+winston.info(`Launching OyaPi ${new Date()}`);
 
 try {
     var rpio = require('rpio');

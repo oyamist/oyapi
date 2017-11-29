@@ -47,8 +47,12 @@
             }
             var vessel = this.vessel;
             vessel.emitter.on(OyaVessel.SENSE_TEMP_INTERNAL, v=>{
-                var stmt = OyaPi.cql_sensor_insert(vessel.name, OyaVessel.SENSE_TEMP_INTERNAL, v);
-                console.log(`cql ${stmt}`);
+                try {
+                    var stmt = OyaPi.sql_sensor_insert(vessel.name, OyaVessel.SENSE_TEMP_INTERNAL, v);
+                    winston.info(`sql ${stmt}`);
+                } catch (e) {
+                    winston.error('sql', e.stack);
+                }
             });
         }
 
