@@ -6,6 +6,7 @@ const express = require('express');
 const app = module.exports = express();
 const rb = require("rest-bundle");
 const OyaPi = require("../src/oyapi");
+const DbSqlite3 = require("oya-vue").DbSqlite3;
 const winston = require("winston");
 
 app.use(compression());
@@ -37,7 +38,12 @@ let async = function*() {
     try {
         // define RestBundles
         var restBundles = app.locals.restBundles = [];
-        var oya = new OyaPi("oyapi");
+        var dbfacade = new DbSqlite3({
+            logPeriod: 60,
+        });
+        var oya = new OyaPi("oyapi", {
+            dbfacade,
+        });
         restBundles.push(oya);
 
         // declare ports
