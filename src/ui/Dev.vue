@@ -18,7 +18,7 @@
         </div>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed flat class="black" >
+    <v-toolbar fixed flat class="black" app >
         <v-toolbar-side-icon dark @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-toolbar-title class="grey--text text--lighten-1">
             <div style="display:flex; flex-flow:column; ">
@@ -29,9 +29,9 @@
         <v-spacer/>
         <rb-web-socket/>
     </v-toolbar>
-    <main>
-        <v-container fluid> <router-view/> </v-container>
-    </main>
+    <v-content>
+        <v-container fluid > <router-view/> </v-container>
+    </v-content>
 </v-app>
 
 </template> 

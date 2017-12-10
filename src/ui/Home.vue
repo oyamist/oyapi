@@ -1,6 +1,6 @@
 <template>
 
-<div>
+<div >
     <oya-reactor service="oyapi"></oya-reactor>
     <rb-state></rb-state>
 </div>
