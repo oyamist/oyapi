@@ -46,32 +46,6 @@
                 winston.info("rpio not available.");
             }
             var vessel = this.vessel;
-            vessel.emitter.on(OyaVessel.SENSE_TEMP_INTERNAL, v=>{
-                try {
-                    var date = new Date();
-                    var stmt = OyaPi.sql_sensor_insert(vessel.name, date, OyaVessel.SENSE_TEMP_INTERNAL, v);
-                    //winston.info(`sql ${stmt}`);
-                } catch (e) {
-                    winston.error('sql', e.stack);
-                }
-            });
-        }
-
-        static sql_sensor_insert(vessel, date, evt, value) {
-            var yyyy = date.getFullYear();
-            var mo = ('0'+(date.getMonth()+1)).slice(-2);
-            var dd = ('0'+date.getDate()).slice(-2);
-            var hh = ('0'+date.getHours()).slice(-2);
-            var mm = ('0'+date.getMinutes()).slice(-2);
-            var ss = ('0'+date.getSeconds()).slice(-2);
-            var stmt = `insert into sensordata(vessel,evt,d,t,v) values(` +
-                `'${vessel}',` +
-                `'${evt}',` +
-                `'${yyyy}-${mo}-${dd}',` +
-                `'${hh}:${mm}:${ss}',` +
-                `${value}` +
-                ');';
-            return stmt;
         }
 
         init_rpio() {
