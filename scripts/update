@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get update
+
 REBOOT=0
 OPTIND=1
 while getopts "r" opt; do
@@ -48,6 +50,10 @@ npm install
 sync
 
 `dirname $0`/sqlite3-install.sh
+RC=$?; if [ "$RC" != "0" ]; then 
+    echo -e "ERROR\t: Could not set up SQLite3 database oyamist.db"
+    exit $RC
+fi
 
 echo -e "UPDATE\t: Building web server..."
 npm run build
