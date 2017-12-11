@@ -1,4 +1,6 @@
 #!/bin/bash
+
+sudo apt-get update
 echo -e "INSTALL\t: `date` setting up Raspberry Pi"
 
 if [ ! -e node_modules ]; then
@@ -26,6 +28,6 @@ sudo chown pi:pi /var/log/motion
 echo -e "INSTALL\t: installing Node V8"
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 
-scripts/cassandra-install.sh
+scripts/sqlite3-install.sh
 
 echo -e "INSTALL\t: `date` OyaMist Raspberry Pi setup completed"
