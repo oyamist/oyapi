@@ -5,6 +5,7 @@
 	const RaspiFacade = require("../index").RaspiFacade;
 	const SystemFacade = require("oya-vue").SystemFacade;
 	const Sensor = require("oya-vue").Sensor;
+    const EventEmitter = require('events');
 	const OyaVessel = require("../index").OyaVessel;
     const SQLite3 = require('sqlite3').verbose();
     const testDate = new Date(2017,2,9,12,34,56);
@@ -32,14 +33,21 @@
                 var r = await facade.oneWireRead('28-MOCK2',Sensor.TYPE_DS18B20.type);
                 r.temp.should.equal(20125);
                 SystemFacade.facade = facade;
+                var temp = null;
+                var emitter = new EventEmitter();
+                emitter.on(OyaVessel.SENSE_TEMP_INTERNAL, v=>{
+                    temp = v;
+                });
                 var sensor = new Sensor({
                     type: Sensor.TYPE_DS18B20.type,
                     address: "28-MOCK1",
+                    emitter,
                 });
                 var r = await sensor.read();
                 should(r).properties({
                     temp: 17.812,
                 });
+                should(temp).equal(17.812);
                 done();
             } catch(e) {
                 done(e);

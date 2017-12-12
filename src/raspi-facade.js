@@ -14,7 +14,6 @@
     class RaspiFacade extends SystemFacade {
         constructor(opts = {}) {
             super(opts);
-            console.log("raspifacade");
             fs.readdir(W1DIR, (err, files) => {
                 if (err) {
                     this.w1Addresses = ["28-MOCK1","28-MOCK2"];

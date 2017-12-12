@@ -4,7 +4,7 @@
 	const should = require('should');
 	const winston = require("winston");
 	const PmiAutomation = require("../index").drivers.PmiAutomation
-	winston.level =  'debug';
+	winston.level =  'warn';
 
     const rpio = require('rpio');
     if (!rpio.hasOwnProperty('isMock')) {
@@ -15,7 +15,6 @@
         });
         rpio.init();
     }
-    console.log("isMock", rpio.isMock);
 
 	it("turns on an led", function(done) {
         if (rpio.isMock) {
