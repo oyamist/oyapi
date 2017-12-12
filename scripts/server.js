@@ -6,7 +6,9 @@ const express = require('express');
 const app = module.exports = express();
 const rb = require("rest-bundle");
 const OyaPi = require("../src/oyapi");
+const RaspiFacade = require("../src/raspi-facade");
 const DbSqlite3 = require("oya-vue").DbSqlite3;
+const SystemFacade = require("oya-vue").SystemFacade;
 const winston = require("winston");
 
 app.use(compression());
@@ -41,6 +43,7 @@ let async = function*() {
         var dbfacade = new DbSqlite3({
             logPeriod: 60,
         });
+        SystemFacade.facade = new RaspiFacade();
         var oya = new OyaPi("oyapi", {
             dbfacade,
         });

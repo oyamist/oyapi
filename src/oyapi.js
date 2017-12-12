@@ -5,6 +5,7 @@
     const OyaReactor = require("oya-vue").OyaReactor;
     const OyaVessel = require("oya-vue").OyaVessel;
     const Sensor = require("oya-vue").Sensor;
+    const SystemFacade = require("oya-vue").SystemFacade;
     const OyaConf = require("oya-vue").OyaConf;
     const SQLite3 = require('sqlite3').verbose();
     const PmiAutomation = require("./drivers/pmi-automation");

@@ -1,7 +1,10 @@
 #!/bin/bash
 
-sudo apt-get update
 echo -e "INSTALL\t: `date` setting up Raspberry Pi"
+
+sudo apt-get update
+
+sudo apt-get -y install vim
 
 if [ ! -e node_modules ]; then
     echo -e "INSTALL\t: installing nodejs"

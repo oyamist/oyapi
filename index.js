@@ -5,6 +5,7 @@ module.exports = {
     OyaVessel: OyaVue.OyaVessel,
     OyaReactor: OyaVue.OyaReactor,
     OyaPi: require("./src/oyapi"),
+    RaspiFacade: require("./src/raspi-facade"),
     drivers: {
         PmiAutomation: require("./src/drivers/pmi-automation"),
     }
