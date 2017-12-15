@@ -26,7 +26,7 @@
         }
         parseDS18B20(err,data) {
             if (err) {
-                return Promise.reject(e);
+                return Promise.reject(err);
             } else {
                 var re = new RegExp(/.*\n.*t=([0-9,]+).*\n.*/m);
                 var tempstr = data.toString().replace(re, "$1");
