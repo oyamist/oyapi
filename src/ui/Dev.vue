@@ -29,8 +29,11 @@
         <v-spacer/>
         <rb-web-socket/>
     </v-toolbar>
-    <v-content>
-        <v-container fluid > <router-view/> </v-container>
+    <v-content class='oya-content'>
+        <oya-plant service='oyapi'></oya-plant>
+        <v-container fluid style="padding-right:1em"> 
+            <router-view></router-view> 
+        </v-container>
     </v-content>
 </v-app>
 
@@ -70,4 +73,8 @@ export default {
 }
 
 </script>
-<style> </style>
+<style> 
+.oya-content {
+    background: #ddd;
+}
+</style>
