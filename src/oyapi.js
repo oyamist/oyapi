@@ -64,8 +64,8 @@
             setTimeout(() => ahat.light.comms.enable(false), 1000);
             setTimeout(() => ahat.light.warn.enable(false), 1500);
             self.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
-                ahat.light.power.enable(value);
                 rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
+                //ahat.light.power.enable(value);
             });
             const pbtn = 37;
             rpio.open(pbtn, rpio.INPUT, rpio.PULL_DOWN);
