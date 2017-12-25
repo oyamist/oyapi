@@ -7,8 +7,7 @@
         </v-expansion-panel-content>
         <v-expansion-panel-content >
             <div slot="header">Charts</div>
-            <oya-chart palette="red" sensorProp="tempInternal" :service="service"></oya-chart>
-            <oya-chart palette="blue" sensorProp="humidityInternal" :service="service"></oya-chart>
+            <oya-chart-panel service='oyapi'/>
         </v-expansion-panel-content>
         <v-expansion-panel-content >
             <div slot="header">Developer</div>
