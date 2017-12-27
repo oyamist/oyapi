@@ -64,22 +64,32 @@
             setTimeout(() => ahat.light.comms.enable(false), 1000);
             setTimeout(() => ahat.light.warn.enable(false), 1500);
             self.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
-                rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
+                try {
+                    if (pin >= 0) {
+                        rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
+                    }
+                } catch(e) {
+                    winston.error('oyapi:', e.stack);
+                }
                 //ahat.light.power.enable(value);
             });
             const pbtn = 37;
             rpio.open(pbtn, rpio.INPUT, rpio.PULL_DOWN);
             rpio.poll(pbtn, (pin) => {
-                var pinState = rpio.read(pin);
-                var state = pinState ? 'pressed' : 'released' ;
-                if (curState !== state) {
-                    if (curState) {
-                        winston.info(`Priming mist system`);
-                        self.vessel.setCycle(OyaVessel.CYCLE_PRIME);
+                try {
+                    var pinState = rpio.read(pin);
+                    var state = pinState ? 'pressed' : 'released' ;
+                    if (curState !== state) {
+                        if (curState) {
+                            winston.info(`Priming mist system`);
+                            self.vessel.setCycle(OyaVessel.CYCLE_PRIME);
+                        }
+                        curState = state;
+                        ahat.light.comms.enable(pinState);
+                        count++;
                     }
-                    curState = state;
-                    ahat.light.comms.enable(pinState);
-                    count++;
+                } catch(e) {
+                    winston.error('oyapi:', e.stack);
                 }
             });
         }
