@@ -165,10 +165,11 @@ HEREFDISK
     fi
 
     SDDIR=`find / -name 'SD Card'`
-    if [ -e $SDDIR ]; then
-        echo -e "SDCARD\t: SD card found at $SDCARD"
+    if [ -e "${SDDIR}" ]; then
+        echo -e "SDCARD\t: SD card found at $SDDIR"
     else 
-        echo -e "SDCARD\t: No SD card found $SDCARD"
+        echo -e "SDCARD\t: No SD card found $SDDIR"
+        exit
     fi
     ln -s -f -T "${SDDIR}" SDCard
     SDDIR=SDCard
