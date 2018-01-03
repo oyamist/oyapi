@@ -72,9 +72,14 @@
                 }
                 //ahat.light.power.enable(value);
             });
+            this.initSwitches();
+        }
+
+        initSwitches() {
             this.oyaConf.switches.forEach(sw=>{
                 if (sw.pin >= 0) {
                     try {
+                        winston.info(`Initializing rpio driver for pin:${sw.pin} ${sw.type} ${sw.event}`);
                         var aciveHigh = sw.type === Switch.ACTIVE_HIGH;
                         rpio.open(sw.pin, rpio.INPUT, activeHigh ? rpio.PULL_DOWN : rpio.PULL_UP);
                         rpio.poll(sw.pin, (pin) => {
@@ -101,7 +106,12 @@
 		process_sensors() {
             try {
                 this.oyaConf.sensors.forEach(s=> {
-                    if (s.type !== Sensor.TYPE_NONE.type) {
+                    if (s.type === Sensor.TYPE_NONE.type || s.pin == null || s.pin < 0) {
+                        winston.debug(`Sensor ${s.name} pin:${s.pin} type:${s.type} (not configured)`);
+                        return;
+                    }
+                    winston.info(`Sensor ${s.name} pin:${s.pin} type:${s.type} comm:${s.comm}`);
+                    if (s.comm === Sensor.COMM_I2C) {
                         s.i2cRead = i2cRead;
                         s.i2cWrite = i2cWrite;
                         s.emitter = this.vessel.emitter;
