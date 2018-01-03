@@ -41,28 +41,42 @@
                 i2cWrite,
                 i2cRead,
             }, opts));
-            if (rpio) {
-                this.init_rpio();
-            } else {
-                winston.info("rpio not available.");
-            }
             var vessel = this.vessel;
         }
+
+        static get MCU_HAT_PMI_AUTO_HAT() { return {
+            text: 'PiMoroni Automation Hat (3 relays)',
+            value: 'mcu-hat:pmi-auto-hat',
+        }}
+        static get MCU_HAT_PMI_AUTO_PHAT() { return {
+            text: 'PiMoroni Automation Phat (1 relay)',
+            value: 'mcu-hat:pmi-auto-phat',
+        }}
 
         init_rpio() {
             var self = this;
             winston.info("rpio available. Setting up PiMoroni Automation Hat...");
-            var ahat = self.ahat = new PmiAutomation();
-            ahat.enable();
-            ahat.light.power.write(127);
-            ahat.light.comms.write(127);
-            ahat.light.warn.write(127);
-            ahat.light.power.enable();
-            ahat.light.comms.enable();
-            ahat.light.warn.enable();
-            setTimeout(() => ahat.light.power.enable(false), 500);
-            setTimeout(() => ahat.light.comms.enable(false), 1000);
-            setTimeout(() => ahat.light.warn.enable(false), 1500);
+            if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT) {
+                var ahat = self.ahat = new PmiAutomation();
+                winston.info('OyaPi.init_rpio() Setting up PiMoroni Automation Hat');
+            } else if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_PHAT) {
+                var ahat = self.ahat = new PmiAutomation();
+                winston.info('OyaPi.init_rpio() Setting up PiMoroni Automation Phat');
+            } else {
+                winston.info('OyaPi.init_rpio() Running without Raspberry Pi hats');
+            }
+            if (self.ahat) {
+                ahat.enable();
+                ahat.light.power.write(127);
+                ahat.light.comms.write(127);
+                ahat.light.warn.write(127);
+                ahat.light.power.enable();
+                ahat.light.comms.enable();
+                ahat.light.warn.enable();
+                setTimeout(() => ahat.light.power.enable(false), 500);
+                setTimeout(() => ahat.light.comms.enable(false), 1000);
+                setTimeout(() => ahat.light.warn.enable(false), 1500);
+            }
             self.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                 try {
                     if (pin >= 0) {
@@ -75,11 +89,19 @@
             });
         }
 
+        getMcuHats() {
+            return [
+                OyaPi.MCU_HAT_PMI_AUTO_HAT,
+                OyaPi.MCU_HAT_PMI_AUTO_PHAT,
+                OyaConf.MCU_HAT_NONE,
+            ];
+        }
+
         initSwitches() {
             this.oyaConf.switches.forEach(sw=>{
                 if (sw.pin >= 0) {
                     try {
-                        winston.info(`Initializing rpio driver for pin:${sw.pin} ${sw.type} ${sw.event}`);
+                        winston.info(`OyaPi.initSwitches() Initializing rpio driver for pin:${sw.pin} ${sw.type} ${sw.event}`);
                         var activeHigh = (sw.type === Switch.ACTIVE_HIGH);
                         rpio.open(sw.pin, rpio.INPUT, activeHigh ? rpio.PULL_DOWN : rpio.PULL_UP);
                         rpio.poll(sw.pin, (pin) => {
@@ -89,7 +111,7 @@
                                 if (curState !== state) { // debounce
                                     curState = state;
                                     var active = sw.emitTo(this.emitter, pinState);
-                                    this.ahat.light.comms.enable(active);
+                                    this.ahat && this.ahat.light.comms.enable(active);
                                     winston.info(`Switch:${sw.name} pin:${sw.pin} active:${active}`);
                                 }
                             } catch(e) {
@@ -135,6 +157,11 @@
 
         onApiModelLoaded() {
             super.onApiModelLoaded();
+            if (rpio) {
+                this.init_rpio();
+            } else {
+                winston.info("rpio not available.");
+            }
             this.initSwitches();
             winston.info("OyaPi onApiModelLoaded");
             var self = this;
