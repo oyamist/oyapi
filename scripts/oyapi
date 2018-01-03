@@ -3,6 +3,9 @@ OYAPI=/home/pi/github/oyapi
 
 pushd $OYAPI
 
-rm -f oyapi.log
+mkdir -p logs
+TS=`date +%Y%m%d.%H%M%S`
+LOGFILE="${OYAPI}/logs/oyapi-${TS}.log"
+ln -sf ${LOGFILE} "${OYAPI}/oyapi.log"
 
-npm start 2>&1 | tee -a oyapi.log
+npm start 2>&1 | tee -a ${LOGFILE}

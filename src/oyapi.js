@@ -31,7 +31,6 @@
         rpio.i2cEnd();
     }
 
-	var count = 0;
 	var curState = null;
 
     class OyaPi extends OyaReactor {
@@ -73,23 +72,28 @@
                 }
                 //ahat.light.power.enable(value);
             });
-            const pbtn = 37;
-            rpio.open(pbtn, rpio.INPUT, rpio.PULL_DOWN);
-            rpio.poll(pbtn, (pin) => {
-                try {
-                    var pinState = rpio.read(pin);
-                    var state = pinState ? 'pressed' : 'released' ;
-                    if (curState !== state) {
-                        if (curState) {
-                            winston.info(`Priming mist system`);
-                            self.vessel.setCycle(OyaVessel.CYCLE_PRIME);
-                        }
-                        curState = state;
-                        ahat.light.comms.enable(pinState);
-                        count++;
+            this.oyaConf.switches.forEach(sw=>{
+                if (sw.pin >= 0) {
+                    try {
+                        var aciveHigh = sw.type === Switch.ACTIVE_HIGH;
+                        rpio.open(sw.pin, rpio.INPUT, activeHigh ? rpio.PULL_DOWN : rpio.PULL_UP);
+                        rpio.poll(sw.pin, (pin) => {
+                            try {
+                                var pinState = rpio.read(pin);
+                                var state = pinState ? 'pressed' : 'released' ;
+                                if (curState !== state) { // debounce
+                                    curState = state;
+                                    var active = sw.emitTo(this.emitter, pinState);
+                                    ahat.light.comms.enable(active);
+                                    winston.info(`Switch:${sw.name} pin:${sw.pin} active:${active}`);
+                                }
+                            } catch(e) {
+                                winston.error(`Cannot handle switch poll ${sw.name} pin:${sw.pin}`, e.stack);
+                            }
+                        });
+                    } catch (e) {
+                        winston.error(`Cannot set up switch ${sw.name} pin:${sw.pin}`, e.stack);
                     }
-                } catch(e) {
-                    winston.error('oyapi:', e.stack);
                 }
             });
         }
@@ -126,6 +130,7 @@
             setInterval(() => {
                 self.process_sensors();
             }, 1000);
+            this.oyaConf.switches[0].emitTo(this.emitter, false);
         }
 
     } //// class OyaPi
