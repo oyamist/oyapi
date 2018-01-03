@@ -89,7 +89,7 @@
                                 if (curState !== state) { // debounce
                                     curState = state;
                                     var active = sw.emitTo(this.emitter, pinState);
-                                    ahat.light.comms.enable(active);
+                                    this.ahat.light.comms.enable(active);
                                     winston.info(`Switch:${sw.name} pin:${sw.pin} active:${active}`);
                                 }
                             } catch(e) {
