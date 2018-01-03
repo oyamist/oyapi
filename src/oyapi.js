@@ -5,6 +5,7 @@
     const OyaReactor = require("oya-vue").OyaReactor;
     const OyaVessel = require("oya-vue").OyaVessel;
     const Sensor = require("oya-vue").Sensor;
+    const Switch = require("oya-vue").Switch;
     const SystemFacade = require("oya-vue").SystemFacade;
     const OyaConf = require("oya-vue").OyaConf;
     const SQLite3 = require('sqlite3').verbose();
@@ -72,7 +73,6 @@
                 }
                 //ahat.light.power.enable(value);
             });
-            this.initSwitches();
         }
 
         initSwitches() {
@@ -80,7 +80,7 @@
                 if (sw.pin >= 0) {
                     try {
                         winston.info(`Initializing rpio driver for pin:${sw.pin} ${sw.type} ${sw.event}`);
-                        var aciveHigh = sw.type === Switch.ACTIVE_HIGH;
+                        var activeHigh = (sw.type === Switch.ACTIVE_HIGH);
                         rpio.open(sw.pin, rpio.INPUT, activeHigh ? rpio.PULL_DOWN : rpio.PULL_UP);
                         rpio.poll(sw.pin, (pin) => {
                             try {
@@ -135,6 +135,7 @@
 
         onApiModelLoaded() {
             super.onApiModelLoaded();
+            this.initSwitches();
             winston.info("OyaPi onApiModelLoaded");
             var self = this;
             setInterval(() => {
