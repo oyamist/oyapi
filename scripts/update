@@ -36,6 +36,7 @@ else
 fi
 
 echo -e "UPDATE\t: Retrieving latest github content..."
+git checkout package-lock.json
 git pull &> /tmp/git.log
 RC=$?; if [ "$RC" != "0" ]; then 
     echo -e "ERROR\t: Could not update"
