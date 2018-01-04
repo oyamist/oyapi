@@ -127,7 +127,7 @@
         }
 
         applyPmiHatCommon(confnew) {
-            var sw = confnew.switches.filter(s=>s.event === OyaVessel.EVENT_PRIME)[0];
+            var sw = confnew.switches.filter(s=>s.event === OyaConf.EVENT_CYCLE_PRIME)[0];
             if (sw && Number(sw.pin) === -1) {
                 sw.pin = 37;
                 sw.type = Switch.ACTIVE_LOW;
