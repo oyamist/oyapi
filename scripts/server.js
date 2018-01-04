@@ -11,6 +11,8 @@ const DbSqlite3 = require("oya-vue").DbSqlite3;
 const SystemFacade = require("oya-vue").SystemFacade;
 const winston = require("winston");
 
+global.__appdir = path.dirname(__dirname);
+
 app.use(compression());
 winston.info(`Launching OyaPi ${new Date()}`);
 
