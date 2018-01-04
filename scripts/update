@@ -1,5 +1,15 @@
 #!/bin/bash
 
+echo -e "UPDATE\t: $0 START `date`"
+
+if [ "`id -u`" == "0" ]; then
+    echo -e "UPDATE\t: superuser detected, switching to normal user"
+    sudo -u pi $0 $*
+    RC=$?
+    exit $RC
+fi
+echo -e "UPDATE\t: normal user detected"
+
 sudo apt-get update
 
 REBOOT=0
@@ -77,3 +87,5 @@ while true; do
            * ) echo "        : Please enter 'y' or 'n'";;
     esac
 done
+
+echo -e "UPDATE\t: $0 END `date`"

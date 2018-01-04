@@ -57,17 +57,12 @@
 
         init_rpio() {
             var self = this;
+            rpio.init({
+                gpioimem: false,
+            });
             if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT.value) {
-                self.ahat = new PmiAutomation();
+                var ahat = self.ahat = new PmiAutomation();
                 winston.info(`OyaPi-${this.name}.init_rpio() Setting up PiMoroni Automation Hat`);
-            } else if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_PHAT.value) {
-                self.ahat = new PmiAutomation();
-                winston.info(`OyaPi-${this.name}.init_rpio() Setting up PiMoroni Automation Phat`);
-            } else {
-                winston.info(`OyaPi-${this.name}.init_rpio() Running without Raspberry Pi hats`);
-            }
-            var ahat = self.ahat;
-            if (ahat) {
                 ahat.enable();
                 ahat.light.power.write(127);
                 ahat.light.comms.write(127);
@@ -78,6 +73,10 @@
                 setTimeout(() => ahat.light.power.enable(false), 500);
                 setTimeout(() => ahat.light.comms.enable(false), 1000);
                 setTimeout(() => ahat.light.warn.enable(false), 1500);
+            } else if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_PHAT.value) {
+                winston.info(`OyaPi-${this.name}.init_rpio() Setting up PiMoroni Automation Phat`);
+            } else {
+                winston.info(`OyaPi-${this.name}.init_rpio() Running without Raspberry Pi hats`);
             }
             self.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                 try {
@@ -103,7 +102,7 @@
             this.oyaConf.switches.forEach(sw=>{
                 if (sw.pin >= 0) {
                     try {
-                        winston.info(`OyaPi-${this.name}.initSwitches() Initializing rpio driver for pin:${sw.pin} ${sw.type} ${sw.event}`);
+                        winston.info(`OyaPi-${this.name}.initSwitches() Initializing rpio driver for ${sw}`);
                         var activeHigh = (sw.type === Switch.ACTIVE_HIGH);
                         rpio.open(sw.pin, rpio.INPUT, activeHigh ? rpio.PULL_DOWN : rpio.PULL_UP);
                         rpio.poll(sw.pin, (pin) => {
@@ -170,14 +169,14 @@
             return super.putOyaConf(req, res, next);
         }
 
-		process_sensors() {
+        process_sensors() {
             try {
                 this.oyaConf.sensors.forEach(s=> {
                     if (s.type === Sensor.TYPE_NONE.type) {
                         winston.debug(`Sensor ${s.name} type:${s.type} (not configured)`);
                         return;
                     }
-                    winston.info(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
+                    winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
                     if (s.comm === Sensor.COMM_I2C) {
                         s.i2cRead = i2cRead;
                         s.i2cWrite = i2cWrite;
