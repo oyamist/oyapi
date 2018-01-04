@@ -55,7 +55,6 @@
 
         init_rpio() {
             var self = this;
-            winston.info("rpio available. Setting up PiMoroni Automation Hat...");
             if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT) {
                 var ahat = self.ahat = new PmiAutomation();
                 winston.info('OyaPi.init_rpio() Setting up PiMoroni Automation Hat');
@@ -157,13 +156,13 @@
 
         onApiModelLoaded() {
             super.onApiModelLoaded();
+            winston.info("OyaPi.onApiModelLoaded()");
             if (rpio) {
                 this.init_rpio();
             } else {
-                winston.info("rpio not available.");
+                winston.info("OyaPi.onApiModelLoaded() rpio not available.");
             }
             this.initSwitches();
-            winston.info("OyaPi onApiModelLoaded");
             var self = this;
             setInterval(() => {
                 self.process_sensors();
