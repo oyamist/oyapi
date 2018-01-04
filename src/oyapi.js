@@ -58,15 +58,16 @@
         init_rpio() {
             var self = this;
             if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT.value) {
-                var ahat = self.ahat = new PmiAutomation();
+                self.ahat = new PmiAutomation();
                 winston.info(`OyaPi-${this.name}.init_rpio() Setting up PiMoroni Automation Hat`);
             } else if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_PHAT.value) {
-                var ahat = self.ahat = new PmiAutomation();
+                self.ahat = new PmiAutomation();
                 winston.info(`OyaPi-${this.name}.init_rpio() Setting up PiMoroni Automation Phat`);
             } else {
                 winston.info(`OyaPi-${this.name}.init_rpio() Running without Raspberry Pi hats`);
             }
-            if (self.ahat) {
+            var ahat = self.ahat;
+            if (ahat) {
                 ahat.enable();
                 ahat.light.power.write(127);
                 ahat.light.comms.write(127);
@@ -172,11 +173,11 @@
 		process_sensors() {
             try {
                 this.oyaConf.sensors.forEach(s=> {
-                    if (s.type === Sensor.TYPE_NONE.type || s.pin == null || s.pin < 0) {
-                        winston.debug(`Sensor ${s.name} pin:${s.pin} type:${s.type} (not configured)`);
+                    if (s.type === Sensor.TYPE_NONE.type) {
+                        winston.debug(`Sensor ${s.name} type:${s.type} (not configured)`);
                         return;
                     }
-                    winston.info(`Sensor ${s.name} pin:${s.pin} type:${s.type} comm:${s.comm}`);
+                    winston.info(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
                     if (s.comm === Sensor.COMM_I2C) {
                         s.i2cRead = i2cRead;
                         s.i2cWrite = i2cWrite;
