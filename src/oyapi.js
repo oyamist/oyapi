@@ -20,7 +20,7 @@
         rpio.i2cSetBaudRate(10000);    /* 10kHz for 10m cables */
         rpio.i2cSetSlaveAddress(adr);
         var rc = rpio.i2cWrite(buf);
-        rc && winston.warn(`i2cWrite(${adr}) => ${rc}`);
+        rc && winston.debug(`i2cWrite(${adr}) => ${rc}`); // wakeup writes fail
         rpio.i2cEnd();
     }
 
