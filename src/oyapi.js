@@ -58,7 +58,7 @@
         init_rpio() {
             var self = this;
             rpio.init({
-                gpioimem: false,
+                gpiomem: false,
             });
             if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT.value) {
                 var ahat = self.ahat = new PmiAutomation();

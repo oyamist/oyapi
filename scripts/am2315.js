@@ -11,7 +11,7 @@ const BYTES_RH_TEMP = 4;
 const BYTES_RH_TEMP_RESPONSE = 8;
 
 rpio.init({
-    gpioimem: false,
+    gpiomem: false,
 });
 rpio.i2cBegin();
 rpio.i2cSetBaudRate(10000);    /* 10kHz for 10m cables */
