@@ -6,9 +6,11 @@
     const OyaVessel = require("oya-vue").OyaVessel;
     const Sensor = require("oya-vue").Sensor;
     const Switch = require("oya-vue").Switch;
+    const Light = require("oya-vue").Light;
     const SystemFacade = require("oya-vue").SystemFacade;
     const OyaConf = require("oya-vue").OyaConf;
     const SQLite3 = require('sqlite3').verbose();
+    const fs = require('fs');
     const PmiAutomation = require("./drivers/pmi-automation");
     const path = require("path");
     const rpio = require("rpio");
@@ -55,14 +57,14 @@
 
         init_rpio() {
             var self = this;
-            if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT) {
+            if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT.value) {
                 var ahat = self.ahat = new PmiAutomation();
-                winston.info('OyaPi.init_rpio() Setting up PiMoroni Automation Hat');
-            } else if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_PHAT) {
+                winston.info(`OyaPi-${this.name}.init_rpio() Setting up PiMoroni Automation Hat`);
+            } else if (this.oyaConf.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_PHAT.value) {
                 var ahat = self.ahat = new PmiAutomation();
-                winston.info('OyaPi.init_rpio() Setting up PiMoroni Automation Phat');
+                winston.info(`OyaPi-${this.name}.init_rpio() Setting up PiMoroni Automation Phat`);
             } else {
-                winston.info('OyaPi.init_rpio() Running without Raspberry Pi hats');
+                winston.info(`OyaPi-${this.name}.init_rpio() Running without Raspberry Pi hats`);
             }
             if (self.ahat) {
                 ahat.enable();
@@ -100,7 +102,7 @@
             this.oyaConf.switches.forEach(sw=>{
                 if (sw.pin >= 0) {
                     try {
-                        winston.info(`OyaPi.initSwitches() Initializing rpio driver for pin:${sw.pin} ${sw.type} ${sw.event}`);
+                        winston.info(`OyaPi-${this.name}.initSwitches() Initializing rpio driver for pin:${sw.pin} ${sw.type} ${sw.event}`);
                         var activeHigh = (sw.type === Switch.ACTIVE_HIGH);
                         rpio.open(sw.pin, rpio.INPUT, activeHigh ? rpio.PULL_DOWN : rpio.PULL_UP);
                         rpio.poll(sw.pin, (pin) => {
@@ -122,6 +124,49 @@
                     }
                 }
             });
+        }
+
+        applyPmiHatCommon(confnew) {
+            var sw = confnew.switches.filter(s=>s.event === OyaVessel.EVENT_PRIME)[0];
+            if (sw && Number(sw.pin) === -1) {
+                sw.pin = 37;
+                sw.type = Switch.ACTIVE_LOW;
+                winston.info(`OyaPi-${this.name}.applyMcuHatDefaults() `, sw);
+            }
+            var light = confnew.lights.filter(a=>a.spectrum === Light.SPECTRUM_FULL)[0];
+            if (light && Number(light.pin) === -1) {
+                light.pin = 32;
+                winston.info(`OyaPi-${this.name}.applyMcuHatDefaults() `, light);
+            }
+        }
+
+        applyMcuHatDefaults(confnew) {
+            if (confnew.mcuHat === this.oyaConf.mcuHat) {
+                return confnew;
+            }
+            if (confnew.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_HAT.value) {
+                winston.info(`OyaPi-${this.name}.applyMcuHatDefaults() mcuHat:PMI Automation Hat`);
+                this.applyPmiHatCommon(confnew);
+                var act = confnew.actuators.filter(a=>a.activate === OyaVessel.EVENT_MIST)[0];
+                if (act && Number(act.pin) === -1) {
+                    act.pin = 33;
+                    winston.info(`OyaPi-${this.name}.applyMcuHatDefaults() `, act);
+                }
+            } else if (confnew.mcuHat === OyaPi.MCU_HAT_PMI_AUTO_PHAT.value) {
+                winston.info(`OyaPi-${this.name}.applyMcuHatDefaults() mcuHat:PMI Automation Phat`);
+                this.applyPmiHatCommon(confnew);
+                var act = confnew.actuators.filter(a=>a.activate === OyaVessel.EVENT_MIST)[0];
+                if (act && Number(act.pin) === -1) {
+                    act.pin = 36;
+                    winston.info(`OyaPi-${this.name}.applyMcuHatDefaults() `, act);
+                }
+            }
+            return confnew;
+        }
+
+        putOyaConf(req, res, next) {
+            this.applyMcuHatDefaults(req.body.apiModel);
+            return super.putOyaConf(req, res, next);
         }
 
 		process_sensors() {
@@ -154,13 +199,14 @@
             }
 		}
 
-        onApiModelLoaded() {
-            super.onApiModelLoaded();
-            winston.info("OyaPi.onApiModelLoaded()");
+        onApiModelLoaded(apiModel) {
+            super.onApiModelLoaded(apiModel);
+            //fs.writeFileSync('/tmp/apiModel.json', JSON.stringify(apiModel,null,4));
+            winston.info(`OyaPi-${this.name}.onApiModelLoaded()`);
             if (rpio) {
                 this.init_rpio();
             } else {
-                winston.info("OyaPi.onApiModelLoaded() rpio not available.");
+                winston.info(`OyaPi-${this.name}.onApiModelLoaded() rpio not available.`);
             }
             this.initSwitches();
             var self = this;
