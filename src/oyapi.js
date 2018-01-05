@@ -170,8 +170,9 @@
         }
 
         process_sensors() {
-            try {
-                this.oyaConf.sensors.forEach(s=> {
+            const MAX_READ_ERRORS = 5;
+            this.oyaConf.sensors.forEach(s=> {
+                try {
                     if (s.type === Sensor.TYPE_NONE.type) {
                         winston.debug(`Sensor ${s.name} type:${s.type} (not configured)`);
                         return;
@@ -180,7 +181,6 @@
                         winston.debug(`Sensor ${s.name} type:${s.type} (muted due to errors)`);
                         return;
                     }
-                    const MAX_READ_ERRORS = 5;
 
                     winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
                     s.i2cRead = i2cRead;
@@ -194,10 +194,10 @@
                             winston.error(`sensor ${s.name}/${s.loc} disabled (too many errors)`);
                         }
                     });
-                });
-            } catch (e) {
-                winston.error(`process_sensors error sensor ${s.name}`, e);
-            }
+                } catch (e) {
+                    winston.error(`process_sensors error sensor ${s.name}`, e.stack);
+                }
+            });
 		}
 
         onApiModelLoaded(apiModel) {
