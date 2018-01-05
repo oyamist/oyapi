@@ -176,23 +176,24 @@
                         winston.debug(`Sensor ${s.name} type:${s.type} (not configured)`);
                         return;
                     }
-                    winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
-                    if (s.comm === Sensor.COMM_I2C) {
-                        s.i2cRead = i2cRead;
-                        s.i2cWrite = i2cWrite;
-                        s.emitter = this.vessel.emitter;
-                        const MAX_READ_ERRORS = 5;
-                        if (s.readErrors < MAX_READ_ERRORS) {
-                            s.read().then(r=>{
-                                winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
-                            }).catch(e=>{
-                                winston.info(`read error #${s.readErrors} sensor ${s.name}`, e);
-                                if (s.readErrors === MAX_READ_ERRORS) {
-                                    winston.error(`sensor ${s.name}/${s.loc} disabled (too many errors)`);
-                                }
-                            });
-                        }
+                    if (s.readErrors >= MAX_READ_ERRORS) {
+                        winston.debug(`Sensor ${s.name} type:${s.type} (muted due to errors)`);
+                        return;
                     }
+                    const MAX_READ_ERRORS = 5;
+
+                    winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
+                    s.i2cRead = i2cRead;
+                    s.i2cWrite = i2cWrite;
+                    s.emitter = this.vessel.emitter;
+                    s.read().then(r=>{
+                        winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
+                    }).catch(e=>{
+                        winston.info(`read error #${s.readErrors} sensor ${s.name}`, e);
+                        if (s.readErrors === MAX_READ_ERRORS) {
+                            winston.error(`sensor ${s.name}/${s.loc} disabled (too many errors)`);
+                        }
+                    });
                 });
             } catch (e) {
                 winston.error(`process_sensors error sensor ${s.name}`, e);
