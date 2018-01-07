@@ -10,6 +10,10 @@
             <oya-chart-panel service='oyapi'/>
         </v-expansion-panel-content>
         <v-expansion-panel-content >
+            <div slot="header">Network</div>
+            <oya-network :service="service"/>
+        </v-expansion-panel-content>
+        <v-expansion-panel-content >
             <div slot="header">Developer</div>
             <rb-state></rb-state>
         </v-expansion-panel-content>
