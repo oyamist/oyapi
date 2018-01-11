@@ -1,0 +1,15 @@
+#!/bin/bash
+
+MODEL="NOPI"
+
+if [ -e /sys/firmware/devicetree/base/model ]; then
+    MODEL=`cat /sys/firmware/devicetree/base/model | tr -d '\000'`
+fi
+echo -e "INSTALL\t: computer is $MODEL"
+
+SCRIPTDIR=`dirname $0`
+if [ "$MODEL" == "NOPI" ]; then
+    $SCRIPTDIR/sqlite3-install.sh
+else
+    $SCRIPTDIR/oyapi-install.sh
+fi

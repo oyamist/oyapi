@@ -40,6 +40,7 @@
                 });
                 var sensor = new Sensor({
                     type: Sensor.TYPE_DS18B20.type,
+                    loc: Sensor.LOC_INTERNAL,
                     address: "28-MOCK1",
                     emitter,
                 });
