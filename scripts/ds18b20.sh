@@ -10,7 +10,7 @@ var devices = fs.readdirSync(w1).filter(f=>f.startsWith('28'));
 
 if (devices.length === 0) {
     console.log('no 1-wire devices');
-    Process.exit(-1);
+    process.exit(-1);
 }
 console.log('devices',devices);
 devices.forEach(dev=>{
