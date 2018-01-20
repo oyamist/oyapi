@@ -189,7 +189,7 @@
                     s.read().then(r=>{
                         winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
                     }).catch(e=>{
-                        winston.info(`read error #${s.readErrors} sensor ${s.name}`, e);
+                        winston.info(`OyaPi.process_sensors() read error #${s.readErrors} sensor ${s.name} stack:`, e.stack);
                         if (s.readErrors === MAX_READ_ERRORS) {
                             winston.error(`sensor ${s.name}/${s.loc} disabled (too many errors)`);
                         }
