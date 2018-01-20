@@ -9,7 +9,7 @@
     "src": "src"
   },
   "dependencies": {
-    "oya-vue": "^0.25.2",
+    "oya-vue": "^0.25.3",
     "rimraf": "^2.6.2",
     "rpio": "^0.9.18",
     "sqlite3": "^3.1.13"
