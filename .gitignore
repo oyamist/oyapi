@@ -3,7 +3,7 @@
 **/SDCard
 dist
 api-model/
-oyamist.db
+oyamist*.db
 
 # Logs
 logs

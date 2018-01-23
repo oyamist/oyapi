@@ -66,7 +66,7 @@ sync
 
 `dirname $0`/sqlite3-install.sh
 RC=$?; if [ "$RC" != "0" ]; then 
-    echo -e "ERROR\t: Could not set up SQLite3 database oyamist.db"
+    echo -e "ERROR\t: Could not set up SQLite3 database "
     exit $RC
 fi
 

@@ -55,12 +55,12 @@
             }
         })();
     });
-    it("sqlite3 uses oyamist.db", function(done) {
+    it("sqlite3 uses oyamist-v1.0.db", function(done) {
         var async = function*() {
             try {
                 var countStmt = `select count(*) c from sensordata as sd where evt='testevt'`;
                 var stmtDel = `delete from sensordata where sensordata.vessel='test'`;
-                var db = new SQLite3.Database('./oyamist.db', SQLite3.OPEN_READWRITE);
+                var db = new SQLite3.Database('./oyamist-v1.0.db', SQLite3.OPEN_READWRITE);
                 db.on('error', e=> async.throw(e));
                 yield db.on('open', ()=>async.next(true));
 
