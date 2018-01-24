@@ -1,6 +1,6 @@
 {
   "name": "oyapi",
-  "version": "0.16.7",
+  "version": "0.16.8",
   "description": "OyaMist for Raspberry Pi 3",
   "main": "index.js",
   "directories": {
@@ -35,7 +35,7 @@
     "dev": "concurrently \"scripts/server.js test \" \"npm run dev:vue\"",
     "dev:debug": "concurrently \"scripts/server.js --log-debug test aloha\" \"npm run dev:vue\"",
     "dev:vue": "cross-env NODE_ENV=development webpack-dev-server --config cfg/webpack.dev.js --hot",
-    "start": "scripts/server.js oyapi",
+    "start": "--max_old_space_size=500 scripts/server.js oyapi",
     "test": "npm run test:verbose",
     "test:test": "mocha -w -R min --inline-diffs -g TEST",
     "test:verbose": "mocha --inline-diffs",
