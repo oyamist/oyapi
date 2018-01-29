@@ -27,7 +27,7 @@
         });
         rpio.init();
     }
-    it("TESTTESTRaspiFacade reads and parses 1-wire", function(done) {
+    it("RaspiFacade reads and parses 1-wire", function(done) {
         (async function() {
             try {
                 var facade = new RaspiFacade();
