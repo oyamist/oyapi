@@ -42,9 +42,17 @@ let async = function*() {
     try {
         // define RestBundles
         var restBundles = app.locals.restBundles = [];
-        var dbfacade = new DbSqlite3({
-            logPeriod: 60,
-        });
+        if (serviceName === 'test') {
+            var dbname = './test/test-v1.0.db';
+            var dbfacade = new DbSqlite3({ 
+                dbname,
+                logPeriod: 60,
+            });
+        } else {
+            var dbfacade = new DbSqlite3({
+                logPeriod: 60,
+            });
+        }
         SystemFacade.facade = new RaspiFacade();
         var oya = new OyaPi("oyapi", {
             dbfacade,
