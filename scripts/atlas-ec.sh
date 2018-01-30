@@ -55,14 +55,18 @@ rpio.msleep(READ_MS);
 var rc = rpio.i2cRead(inBuf);
 console.log(`i2cRead => ${rc}`);
 if (inBuf[0] === 1 && inBuf[inBuf.length-1] === 0) {
-    var reading = inBuf.toString("utf8", 1, inBuf.length-1);
-    reading = reading+"";
+    var reading = inBuf.toString("utf8", 1, inBuf.length-1).replace(/\0/g,'');
     var ec = Number(reading);
     var ppm = (ec / 1.56).toFixed(1);
     console.log("response", 
         `0x${inBuf[0].toString(16)}`,
-        reading,
+        `0x${inBuf[1].toString(16)}`,
+        `0x${inBuf[2].toString(16)}`,
+        `0x${inBuf[3].toString(16)}`,
+        `0x${inBuf[4].toString(16)}`,
+        `0x${inBuf[5].toString(16)}`,
         `0x${inBuf[6].toString(16)}`,
+        reading,
         typeof reading,
         ec, "ec",
         ppm, "ppm",
