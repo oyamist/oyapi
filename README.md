@@ -34,13 +34,13 @@ OyaPi displays summary status of all active OyaPi devices on the local subnet.
 
 1. Install [Raspbian Noobs](https://www.raspberrypi.org/downloads/noobs/) on a 16GB Micro SD card.
 1. With `sudo raspi-config`, configure the following:
-  1. Change password _(for your safety!)_
-  1. Advanced: Change hostname _(e.g., bioreactor1)_
-  1. Advanced: Enable SSH _(for remote access)_
-  1. Advanced: Enable I2C _(for sensors)_
-  1. Advanced: Enable 1-Wire _(for sensors)_
-  1. Internationalization: Set timezone _(for scheduling)_
-  1. Enable camera _(optional)_
-  1. Enable boot to command line
+    * Change password _(for your safety!)_
+    * Advanced: Change hostname _(e.g., bioreactor1)_
+    * Advanced: Enable SSH _(for remote access)_
+    * Advanced: Enable I2C _(for sensors)_
+    * Advanced: Enable 1-Wire _(for sensors)_
+    * Internationalization: Set timezone _(for scheduling)_
+    * Enable camera _(optional)_
+    * Enable boot to command line
 
 #### Configure
