@@ -55,4 +55,4 @@ git clone https://github.com/oyamist/oyapi
 cd oyapi
 scripts/oyapi-install.sh
 ```
-
+Reboot your Raspberry Pi and use a Chrome browser to access OyaPi (e.g., http://bioreactor1)
