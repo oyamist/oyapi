@@ -9,12 +9,12 @@ With OyaPi you can schedule grow tent lighting cycles as well as pump misting cy
 ### Sensors
 The following sensors are currently supported:
 
-    | Sensor | Measurement | Immersible| Protocol |
-    | :----: | :----: | :----: |
-    | DS18B20 | Temperature | Yes | I2C |
-    | Atlas Scientific EZO EC K1 | Conductivity (EC) | Yes | I2C |
-    | AM2315 | Temperature/Humidity | No | I2C |
-    | SHT31-DIS | Temperature/Humidity | No | I2C |
+| Sensor | Measurement | Immersible | Protocol |
+| :----: | :----: | :----: |
+| DS18B20 | Temperature | Yes | I2C |
+| Atlas Scientific EZO EC K1 | Conductivity (EC) | Yes | I2C |
+| AM2315 | Temperature/Humidity | No | I2C |
+| SHT31-DIS | Temperature/Humidity | No | I2C |
 
 ### Other
 * Software: NodeJS, Vue, Vuetify, SQlite3
