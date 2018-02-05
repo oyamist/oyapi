@@ -31,6 +31,7 @@ OyaPi displays summary status of all active OyaPi devices on the local subnet.
 # Installation
 
 #### Set up the Raspberry Pi operating system:
+
 1. Install [Raspbian Noobs](https://www.raspberrypi.org/downloads/noobs/) on a 16GB Micro SD card.
 1. With `sudo raspi-config`, configure the following:
 1.1. Change password _(for your safety!)_
