@@ -18,6 +18,10 @@ The following sensors are currently supported:
 | [AM2315](https://www.adafruit.com/product/1293) | Temperature/Humidity | No | I2C | -- |
 | [SHT31-DIS](https://www.adafruit.com/product/2857) | Temperature/Humidity | No | I2C | -- |
 
+Some probes (e.g., EC probes) require calibration for temperature compensation.
+OyaPi uses an internal neural network for temperature compensation. The OyaPi
+neural network is more accurate than linear (e.g., 1- or 2-point) 
+approximations commonly used in industry.
 
 ### Network Dashboard
 OyaPi displays summary status of all active OyaPi devices on the local subnet.
