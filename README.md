@@ -19,10 +19,10 @@ The following sensors are currently supported:
 | [SHT31-DIS](https://www.adafruit.com/product/2857) | Temperature/Humidity | No | I2C | -- |
 
 
-### Network Management
+### Network Dashboard
 OyaPi displays summary status of all active OyaPi devices on the local subnet.
-<a href="https://raw.githubusercontent.com/oyamist/oyapi/master/static/img/oyapi.png">
-    <img src="https://raw.githubusercontent.com/oyamist/oyapi/master/static/img/oyapi.png" height=400px>
+<a href="https://raw.githubusercontent.com/oyamist/oyapi/master/static/img/oyapi-network.png">
+    <img src="https://raw.githubusercontent.com/oyamist/oyapi/master/static/img/oyapi-network.png" height=400px>
 </a>
 
 ### Other
