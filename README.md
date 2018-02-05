@@ -30,7 +30,7 @@ OyaPi displays summary status of all active OyaPi devices on the local subnet.
 
 # Installation
 
-#### Set up the Raspberry Pi operating system:
+#### Set up the Raspberry Pi 3 operating system:
 
 1. Install [Raspbian Noobs](https://www.raspberrypi.org/downloads/noobs/) on a 16GB Micro SD card.
 1. With `sudo raspi-config`, configure the following:
@@ -42,5 +42,17 @@ OyaPi displays summary status of all active OyaPi devices on the local subnet.
     * Internationalization: Set timezone _(for scheduling)_
     * Enable camera _(optional)_
     * Enable boot to command line
+    * Finish and Reboot
 
-#### Configure
+#### Install OyaPi
+
+Use `ssh` to login to your new Raspberry Pi 3 and enter the following commands
+to install OyaPi (this will take several minutes):
+
+```bash
+mkdir github
+git clone https://github.com/oyamist/oyapi
+cd oyapi
+scripts/oyapi-install.sh
+```
+
