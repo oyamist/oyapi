@@ -34,6 +34,7 @@ OyaPi displays summary status of all active OyaPi devices on the local subnet.
 
 1. Install [Raspbian Noobs](https://www.raspberrypi.org/downloads/noobs/) on a 16GB Micro SD card.
 1. With `sudo raspi-config`, configure the following:
+
 1.1. Change password _(for your safety!)_
 1.1. Advanced: Change hostname _(e.g., bioreactor1)_
 1.1. Advanced: Enable SSH _(for remote access)_
