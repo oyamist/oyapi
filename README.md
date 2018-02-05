@@ -1,6 +1,8 @@
 # oyapi
 OyaPi is Raspberry Pi 3 software for monitoring and controlling aeroponics systems.
 With OyaPi you can schedule grow tent lighting cycles as well as pump misting cycles.
+OyaPi automatically logs sensor data and provides you with live measurements
+as well as historical charts.
 
 <a href="https://raw.githubusercontent.com/oyamist/oyapi/master/static/img/oyapi.png">
     <img src="https://raw.githubusercontent.com/oyamist/oyapi/master/static/img/oyapi.png" height=400px>
@@ -9,12 +11,12 @@ With OyaPi you can schedule grow tent lighting cycles as well as pump misting cy
 ### Sensors
 The following sensors are currently supported:
 
-| Sensor | Measurement | Immersible | Protocol |
-| :----: | :----: | :----: | :----: |
-| DS18B20 | Temperature | Yes | I2C |
-| Atlas Scientific EZO EC K1 | Conductivity (EC) | Yes | I2C |
-| AM2315 | Temperature/Humidity | No | I2C |
-| SHT31-DIS | Temperature/Humidity | No | I2C |
+| Sensor | Measurement | Immersible | Protocol | Calibration |
+| :---- | :----: | :----: | :----: | :----: |
+| [DS18B20](https://www.adafruit.com/product/381) | Temperature | Yes | 1-Wire | -- |
+| [Atlas Scientific EZO EC K1](https://www.atlas-scientific.com/conductivity.html) | Conductivity (EC) | Yes | I2C | Neural Net |
+| [AM2315](https://www.adafruit.com/product/1293) | Temperature/Humidity | No | I2C | -- |
+| [SHT31-DIS](https://www.adafruit.com/product/2857) | Temperature/Humidity | No | I2C | -- |
 
 ### Other
 * Software: NodeJS, Vue, Vuetify, SQlite3
