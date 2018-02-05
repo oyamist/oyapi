@@ -20,7 +20,7 @@ The following sensors are currently supported:
 
 Some probes (e.g., EC probes) require calibration for temperature compensation.
 OyaPi uses an internal neural network for temperature compensation. The OyaPi
-neural network is more accurate than linear (e.g., 1- or 2-point) 
+neural network is more accurate than linear (i.e., 1- or 2-point) 
 approximations commonly used in industry.
 
 ### Network Dashboard
