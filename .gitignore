@@ -1,5 +1,6 @@
 # OyaPi
 *.zip
+.motion
 **/SDCard
 dist
 api-model/
