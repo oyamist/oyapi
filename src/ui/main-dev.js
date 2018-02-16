@@ -6,6 +6,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import rbvue from 'rest-bundle/index-vue';
 import oyavue from 'oya-vue/index-vue';
+import vmc from 'vue-motion-cam/index-vue';
 
 import Dev from './Dev.vue';
 import Home from './Home.vue';
@@ -17,6 +18,7 @@ Vue.use(Vuex);
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(rbvue);
+Vue.use(vmc);
 Vue.use(oyavue);
 //TODO Vue.use(appvue);
 
