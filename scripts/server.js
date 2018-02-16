@@ -3,6 +3,7 @@
 const path = require("path");
 const compression = require('compression');
 const express = require('express');
+const { VmcBundle } = require("vue-motion-cam");
 const app = module.exports = express();
 const rb = require("rest-bundle");
 const OyaPi = require("../src/oyapi");
@@ -51,6 +52,8 @@ let async = function*() {
             dbfacade,
         });
         restBundles.push(oya);
+        var vmc = new VmcBundle("vmc");
+        restBundles.push(vmc);
 
         // declare ports
         var isTesting = module.parent != null && false;
