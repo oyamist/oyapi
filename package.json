@@ -1,6 +1,6 @@
 {
   "name": "oyapi",
-  "version": "0.20.4",
+  "version": "0.20.5",
   "description": "OyaMist for Raspberry Pi 3",
   "main": "index.js",
   "directories": {
@@ -41,7 +41,7 @@
     "build": "bash scripts/build",
     "build:vue": "npm run build:vue-dev ",
     "build:vue-dev": "cross-env NODE_ENV=production webpack --config cfg/webpack.dev.js --progress --hide-modules",
-    "clean": "rm -f *.log*; rimraf dist; rimraf .motion",
+    "clean": "rm -f *.log*; rimraf dist",
     "dev": "concurrently \"scripts/server.js test \" \"npm run dev:vue\"",
     "dev:debug": "concurrently \"scripts/server.js --log-debug test aloha\" \"npm run dev:vue\"",
     "dev:vue": "cross-env NODE_ENV=development webpack-dev-server --config cfg/webpack.dev.js --hot",
