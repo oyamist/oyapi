@@ -35,6 +35,7 @@
             <router-view></router-view> 
         </v-container>
     </v-content>
+    <rb-alerts></rb-alerts>
 </v-app>
 
 </template> 
