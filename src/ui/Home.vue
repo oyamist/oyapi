@@ -7,7 +7,7 @@
         </v-expansion-panel-content>
         <v-expansion-panel-content >
             <div slot="header">Charts</div>
-            <oya-chart-panel service='oyapi'/>
+            <oya-chart-panel service='oyamist'/>
         </v-expansion-panel-content>
         <v-expansion-panel-content >
             <div slot="header">Network</div>
@@ -25,7 +25,7 @@ export default {
 name: 'introduction',
 props: {
     service: {
-        default: "oyapi",
+        default: "oyamist",
     },
 },
 }

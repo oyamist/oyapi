@@ -30,7 +30,7 @@
         <rb-web-socket/>
     </v-toolbar>
     <v-content class='oya-content'>
-        <oya-plant service='oyapi'></oya-plant>
+        <oya-plant service='oyamist'></oya-plant>
         <v-container fluid style="padding-right:1em"> 
             <router-view></router-view> 
         </v-container>

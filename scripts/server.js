@@ -3,14 +3,15 @@
 const path = require("path");
 const compression = require('compression');
 const express = require('express');
-const { VmcBundle } = require("vue-motion-cam");
 const app = module.exports = express();
 const rb = require("rest-bundle");
 const OyaPi = require("../src/oyapi");
 const RaspiFacade = require("../src/raspi-facade");
+var { VmcBundle } = require('vue-motion-cam');
 const DbSqlite3 = require("oya-vue").DbSqlite3;
 const SystemFacade = require("oya-vue").SystemFacade;
 const winston = require("winston");
+const EventEmitter = require('events');
 
 global.__appdir = path.dirname(__dirname);
 
@@ -48,11 +49,15 @@ let async = function*() {
             logPeriod: 60,
         });
         SystemFacade.facade = new RaspiFacade();
-        var oya = new OyaPi("oyapi", {
+        var oyaEmitter = new EventEmitter();
+        var oya = new OyaPi("oyamist", {
             dbfacade,
+            emitter: oyaEmitter,
         });
         restBundles.push(oya);
-        var vmc = new VmcBundle("vmc");
+        var vmc = new VmcBundle("vmc", {
+            emitter: oyaEmitter,
+        });
         restBundles.push(vmc);
 
         // declare ports

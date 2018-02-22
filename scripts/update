@@ -79,7 +79,7 @@ if [ "$REBOOT" == "1" ]; then
 fi
 
 while true; do
-    echo -e "UPDATE\t: Oyapi update requires a reboot"
+    echo -e "UPDATE\t: OyaMist update requires a reboot"
     read -p "UPDATE  : Reboot now? [y,n]:" REBOOT
     case $REBOOT in
         [y]* ) sudo shutdown -r now; break;;

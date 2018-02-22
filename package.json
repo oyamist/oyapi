@@ -1,6 +1,6 @@
 {
   "name": "oyapi",
-  "version": "0.20.10",
+  "version": "0.21.0",
   "description": "OyaMist for Raspberry Pi 3",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
     "src": "src"
   },
   "dependencies": {
-    "oya-vue": "^0.32.10",
+    "oya-vue": "^0.33.4",
     "rimraf": "^2.6.2",
     "rpio": "^0.9.18",
     "sqlite3": "^3.1.13"
@@ -42,10 +42,10 @@
     "build:vue": "npm run build:vue-dev ",
     "build:vue-dev": "cross-env NODE_ENV=production webpack --config cfg/webpack.dev.js --progress --hide-modules",
     "clean": "rm -f *.log*; rimraf dist",
-    "dev": "concurrently \"scripts/server.js test \" \"npm run dev:vue\"",
-    "dev:debug": "concurrently \"scripts/server.js --log-debug test aloha\" \"npm run dev:vue\"",
+    "dev": "concurrently \"scripts/server.js oyamist \" \"npm run dev:vue\"",
+    "dev:debug": "concurrently \"scripts/server.js --log-debug oyamist\" \"npm run dev:vue\"",
     "dev:vue": "cross-env NODE_ENV=development webpack-dev-server --config cfg/webpack.dev.js --hot",
-    "start": "node --max_old_space_size=500 scripts/server.js oyapi",
+    "start": "node --max_old_space_size=300 scripts/server.js oyamist",
     "test": "npm run test:verbose",
     "test:test": "mocha -w -R min --inline-diffs -g TEST",
     "test:verbose": "mocha --inline-diffs",
