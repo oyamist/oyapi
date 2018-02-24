@@ -64,6 +64,15 @@ echo -e "UPDATE\t: Installing dependencies..."
 npm install
 sync
 
+motion -h >& /dev/null
+RC=$?; if [ "$RC" != "0" ]; then 
+    echo -e "INSTALL\t: installing webcam motion capture"
+    sudo apt install motion
+    sudo mkdir -p /var/log/motion
+    sudo chown pi:pi /var/log/motion
+fi
+echo -e "INSTALL\t: `motion -h | head -1`"
+
 `dirname $0`/sqlite3-install.sh
 RC=$?; if [ "$RC" != "0" ]; then 
     echo -e "ERROR\t: Could not set up SQLite3 database "

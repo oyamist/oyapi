@@ -20,8 +20,7 @@ if [ ! -e /etc/rc2.d/S50oyapi ]; then
 	sudo ln -s /etc/init.d/oyapi /etc/rc2.d/S50oyapi
 fi
 
-exit
-scripts/opencv-install.sh
+#scripts/opencv-install.sh
 
 echo -e "INSTALL\t: installing webcam motion capture"
 sudo apt install motion
