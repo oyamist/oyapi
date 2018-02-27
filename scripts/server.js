@@ -54,10 +54,12 @@ let async = function*() {
             dbfacade,
             emitter: oyaEmitter,
         });
+        yieal oya.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
         restBundles.push(oya);
         var vmc = new VmcBundle("vmc", {
             emitter: oyaEmitter,
         });
+        yieal vmc.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
         restBundles.push(vmc);
 
         // declare ports
@@ -68,6 +70,7 @@ let async = function*() {
         // create http and socket servers
         var rbServer = app.locals.rbServer = new rb.RbServer();
         rbServer.listen(app, restBundles, ports);
+        yieal rbServer.initialize().then(r=>async.next(r)).catch(e=>async.throw(e));
 
         winston.debug("firing asyncOnReady event");
         app.locals.asyncOnReady.forEach(async => async.next(app)); // notify waiting async blocks
