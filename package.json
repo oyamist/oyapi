@@ -1,6 +1,6 @@
 {
   "name": "oyapi",
-  "version": "0.22.18",
+  "version": "0.22.19",
   "description": "OyaMist for Raspberry Pi 3",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
     "src": "src"
   },
   "dependencies": {
-    "oya-vue": "^0.35.11",
+    "oya-vue": "^0.35.12",
     "rimraf": "^2.6.2",
     "rpio": "^0.9.18",
     "sqlite3": "^3.1.13"
