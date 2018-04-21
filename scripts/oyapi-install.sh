@@ -20,6 +20,12 @@ if [ ! -e /etc/rc2.d/S50oyapi ]; then
 	sudo ln -s /etc/init.d/oyapi /etc/rc2.d/S50oyapi
 fi
 
+if [ ! -e /etc/rc2.d/S50oyapi-spawnd ]; then
+	echo -e "INSTALL\t: configuring oyapi-spawnd for autoload on boot"
+	sudo cp scripts/oyapi-spawnd /etc/init.d/oyapi-spawnd
+	sudo ln -s /etc/init.d/oyapi-spawnd /etc/rc2.d/S50oyapi-spawnd
+fi
+
 #scripts/opencv-install.sh
 
 echo -e "INSTALL\t: installing webcam motion capture"

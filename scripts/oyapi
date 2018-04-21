@@ -3,10 +3,10 @@ OYAPI=/home/pi/github/oyapi
 
 pushd $OYAPI
 
-sudo -u pi mkdir -p logs
+sudo -u pi mkdir -p local/logs
 TS=`date +%Y%m%d.%H%M%S`
-LOGFILE="${OYAPI}/logs/oyapi-${TS}.log"
-rm -f "${OYAPI}/oyapi.log"
-sudo -u pi ln -sf ${LOGFILE} "${OYAPI}/oyapi.log"
+LOGFILE="${OYAPI}/local/logs/oyapi-${TS}.log"
+rm -f "${OYAPI}/local/oyapi.log"
+sudo -u pi ln -sf ${LOGFILE} "${OYAPI}/local/oyapi.log"
 
 npm start 2>&1 | tee -a ${LOGFILE}

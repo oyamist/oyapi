@@ -3,26 +3,27 @@ OYAPI=/home/pi/github/oyapi
 
 pushd $OYAPI
 
-sudo -u pi mkdir -p logs
-TS=`date +%Y%m%d.%H%M%S`
-LOGFILE="${OYAPI}/logs/oyapi-spawnd-${TS}.log"
-rm -f "${OYAPI}/oyapi-spawnd.log"
-sudo -u pi ln -sf ${LOGFILE} "${OYAPI}/oyapi-spawnd.log"
+sudo -u pi mkdir -p local
+LOGFILE="${OYAPI}/local/oyapi-spawnd.log"
+
+log() {
+    TS=`date --rfc-3339="seconds"`
+    CMD="echo $TS $* >> $LOGFILE"
+    sudo -u pi bash -c "$CMD"
+}
 
 monitor() {
     ps -ef | grep -e 'server.js[[:space:]]oyamist' >& /dev/null
     RC=$?
-    if [ "$RC" == "0" ]; then
-        # echo "oyamist running (no action taken)"
-    else 
-        echo `date --rfc-3339='seconds'` "oyamist not running (restarting...)" | tee -a $LOGFILE
-        # oyapi creates its own log file
+    if [ "$RC" != "0" ]; then
+        log "restarting oyamist" 
         nohup scripts/oyapi >& /dev/null &
     fi
 }
 
+log "$0 initialized" 
 while [  "1" == "1" ]; do
+    sleep 60
     monitor
-    sleep 5
 done
 
