@@ -1,5 +1,6 @@
 # OyaPi
 archive/
+local/
 *.zip
 .motion
 **/SDCard
