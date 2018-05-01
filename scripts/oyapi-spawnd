@@ -8,7 +8,7 @@ LOGFILE="${OYAPI}/local/oyapi-spawnd.log"
 
 log() {
     TS=`date --rfc-3339="seconds"`
-    CMD="echo $TS $* >> $LOGFILE"
+    CMD="echo PID$BASHPID $TS $* >> $LOGFILE"
     sudo -u pi bash -c "$CMD"
 }
 
