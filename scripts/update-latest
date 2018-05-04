@@ -20,7 +20,6 @@ if [ -e /etc/rc2.d/S50oyapi ]; then
     sudo cp scripts/oyapi /etc/init.d
     echo -e "UPDATE\t: updating /etc/init.d/oyapi-spawnd"
     sudo cp scripts/oyapi-spawnd /etc/init.d
-fi
 else
     while true; do
         echo -e "UPDATE\t: Oyapi currently needs to be started manually"
