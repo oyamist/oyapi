@@ -1,29 +1,41 @@
 #!/bin/bash
 OYAPI=/home/pi/github/oyapi
-
-pushd $OYAPI
-
-sudo -u pi mkdir -p local
 LOGFILE="${OYAPI}/local/oyapi-spawnd.log"
-
 log() {
     TS=`date --rfc-3339="seconds"`
     CMD="echo PID$BASHPID $TS $* >> $LOGFILE"
     sudo -u pi bash -c "$CMD"
 }
 
-monitor() {
-    ps -ef | grep -e 'server.js[[:space:]]oyamist' >& /dev/null
-    RC=$?
-    if [ "$RC" != "0" ]; then
-        log "restarting oyamist" 
-        nohup scripts/oyapi >& /dev/null &
-    fi
-}
+pushd $OYAPI
 
-log "$0 initialized" 
-while [  "1" == "1" ]; do
-    sleep 60
-    monitor
-done
+if [ "$1" == "-d" ]; then
+    log "initializing $0 daemon"
+
+    sudo -u pi mkdir -p local
+
+    monitor() {
+        ps -ef | grep -e 'server.js[[:space:]]oyamist' >& /dev/null
+        RC=$?
+        if [ "$RC" != "0" ]; then
+            log "restarting oyamist" 
+            nohup scripts/oyapi >& /dev/null &
+        fi
+    }
+
+    log "$0 initialized" 
+    while [  "1" == "1" ]; do
+        sleep 60
+        monitor
+    done
+
+    echo -e "stopping $0 daemon"
+else 
+    DAEMON=$0
+    log "spawning $DAEMON daemon"
+    pwd
+    nohup $DAEMON -d &
+    log "spawner exiting"
+    exit 0
+fi
 
