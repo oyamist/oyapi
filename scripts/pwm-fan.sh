@@ -24,13 +24,14 @@ var speeds = [
     0,
 ];
 
+var pwmMax = 16384;
 rpio.open(12, rpio.PWM); /* Use pin 12 */
 rpio.pwmSetClockDivider(64);    /* Set PWM refresh rate to 300kHz */
-rpio.pwmSetRange(12, 1024);
+rpio.pwmSetRange(12, pwmMax);
 
 speeds.forEach(s => {
     console.log(`${(s*100).toFixed(1)}%`);
-    rpio.pwmSetData(12, s*1024);
+    rpio.pwmSetData(12, s*pwmMax);
     rpio.msleep(seconds*1000);
 });
 

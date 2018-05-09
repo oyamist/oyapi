@@ -8,7 +8,10 @@
     const Switch = require("oya-vue").Switch;
     const Light = require("oya-vue").Light;
     const SystemFacade = require("oya-vue").SystemFacade;
-    const OyaConf = require("oya-vue").OyaConf;
+    const {
+        OyaConf,
+        OyaMist,
+    } = require("oya-vue");
     const SQLite3 = require('sqlite3').verbose();
     const fs = require('fs');
     const PmiAutomation = require("./drivers/pmi-automation");
@@ -78,6 +81,19 @@
             } else {
                 winston.info(`OyaPi-${this.name}.init_rpio() Running without Raspberry Pi hats`);
             }
+            self.emitter.on(OyaMist.EVENT_FAN_PWM, (value, pin) => {
+                try {
+                    if (pin >= 0) {
+                        var pwmMax = 16384;
+                        rpio.open(pin, rpio.PWM); 
+                        rpio.pwmSetClockDivider(64);    /* Set PWM refresh rate to 300kHz */
+                        rpio.pwmSetRange(pin, pwmMax);
+                        rpio.pwmSetData(pin, value*pwmMax);
+                    }
+                } catch (e) {
+                    winston.error('oyapi:', e.stack);
+                }
+            });
             self.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                 try {
                     if (pin >= 0) {
