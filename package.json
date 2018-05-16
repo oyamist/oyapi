@@ -1,6 +1,6 @@
 {
   "name": "oyapi",
-  "version": "0.28.7",
+  "version": "0.28.8",
   "description": "OyaMist for Raspberry Pi 3",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
     "src": "src"
   },
   "dependencies": {
-    "oya-vue": "^0.39.3",
+    "oya-vue": "^0.39.4",
     "rimraf": "^2.6.2",
     "rpio": "^0.9.18",
     "sqlite3": "^3.1.13"
@@ -29,7 +29,7 @@
     "concurrently": "^3.2.0",
     "cross-env": "^3.0.0",
     "css-loader": "^0.28.0",
-    "mocha": "^3.2.0",
+    "mocha": "^5.1.1",
     "should": "^11.2.0",
     "supertest": "^3.0.0",
     "webpack": "^3.6.0",

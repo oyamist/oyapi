@@ -81,6 +81,7 @@
             } else {
                 winston.info(`OyaPi-${this.name}.init_rpio() Running without Raspberry Pi hats`);
             }
+            winston.info(`OyaPi.init_rpio().emitter on:${OyaMist.EVENT_FAN_PWM}`);
             self.emitter.on(OyaMist.EVENT_FAN_PWM, (value, pin) => {
                 try {
                     if (pin >= 0) {
@@ -94,6 +95,7 @@
                     winston.error('oyapi:', e.stack);
                 }
             });
+            winston.info(`OyaPi.init_rpio().emitter on:${OyaPi.EVENT_RELAY}`);
             self.emitter.on(OyaPi.EVENT_RELAY, (value, pin) => {
                 try {
                     if (pin >= 0) {
@@ -216,24 +218,25 @@
             });
 		}
 
-        initialize() {
-            var promise = super.initialize();
-            promise.then(apiModel => {
-                //fs.writeFileSync('/tmp/apiModel.json', JSON.stringify(apiModel,null,4));
-                winston.info(`OyaPi-${this.name}.onApiModelLoaded()`);
-                if (rpio) {
-                    this.init_rpio();
-                } else {
-                    winston.info(`OyaPi-${this.name}.onApiModelLoaded() rpio not available.`);
-                }
-                this.initSwitches();
-                var self = this;
-                setInterval(() => {
-                    self.process_sensors();
-                }, 1000);
-                this.oyaConf.switches[0].emitTo(this.emitter, false);
-            });
-            return promise;
+        onApiModelLoaded(apiModel) {
+            super.onApiModelLoaded(apiModel);
+            winston.info(`OyaPi-${this.name}.onApiModelLoaded()`);
+            if (rpio) {
+                this.init_rpio();
+            } else {
+                winston.info(`OyaPi-${this.name}.onApiModelLoaded() rpio not available.`);
+            }
+        }
+
+        onInitializeEvents(emitter, apiModel) {
+            super.onInitializeEvents(emitter, apiModel);
+            winston.info(`OyaPi-${this.name}.onInitializeEvents()`);
+            this.initSwitches();
+            var self = this;
+            setInterval(() => {
+                self.process_sensors();
+            }, 1000);
+            this.oyaConf.switches[0].emitTo(this.emitter, false);
         }
 
     } //// class OyaPi
