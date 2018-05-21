@@ -8,7 +8,7 @@ import rbvue from 'rest-bundle/index-vue';
 import oyavue from 'oya-vue/index-vue';
 import vmc from 'vue-motion-cam/index-vue';
 
-import Dev from './Dev.vue';
+import OyaPi from './oyapi.vue';
 import Home from './Home.vue';
 //TODO import appvue from "../../index-vue";
 require('./stylus/main.styl')
@@ -43,10 +43,10 @@ const store = new Vuex.Store({
 });
 
 new Vue({
-    el: '#dev',
+    el: '#oyapi',
     router,
     store,
-    render: h => h(Dev),
+    render: h => h(OyaPi),
     components: {
         Home,
     },

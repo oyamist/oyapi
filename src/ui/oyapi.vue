@@ -1,6 +1,6 @@
 <template>
 
-<v-app id="dev-app" >
+<v-app id="oyapi-app" >
    <v-navigation-drawer temporary absolute light v-model="drawer" enable-resize-watcher app>
       <v-list dense>
         <div v-for="(item,i) in sidebarMain" :key="i">
@@ -47,7 +47,7 @@ import oyavue from "oya-vue/index-vue";
 //import appvue from "../../index-vue";
 
 export default {
-    name: 'dev',
+    name: 'oyapi',
     data() {
         return {
             package: require("../../package.json"),
