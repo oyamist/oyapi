@@ -10,6 +10,13 @@ import vmc from 'vue-motion-cam/index-vue';
 
 import OyaPi from './oyapi.vue';
 import Home from './Home.vue';
+const {
+    OyaDeveloper,
+    OyaNetwork,
+    OyaChartPanel,
+    OyaDashboard,
+} = oyavue.components;
+console.log('oyadev', Object.keys(OyaNetwork));
 //TODO import appvue from "../../index-vue";
 require('./stylus/main.styl')
 
@@ -24,11 +31,22 @@ Vue.use(oyavue);
 
 var routes = [{
         path: '/',
-        redirect: "/home"
-    },
-    {
+        redirect: "/dashboard"
+    },{
         path: '/home',
-        component: Home
+        redirect: "/dashboard"
+    },{
+        path: '/dashboard',
+        component: OyaDashboard,
+    },{
+        path: '/network',
+        component: OyaNetwork,
+    },{
+        path: '/charts',
+        component: OyaChartPanel,
+    },{
+        path: '/developer',
+        component: OyaDeveloper,
     },
 ];
 routes = routes.concat(rbvue.methods.aboutRoutes());
@@ -49,5 +67,6 @@ new Vue({
     render: h => h(OyaPi),
     components: {
         Home,
+        OyaDeveloper,
     },
 })
