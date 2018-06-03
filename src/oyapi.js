@@ -25,6 +25,7 @@
         var rc = rpio.i2cWrite(buf);
         rc && winston.debug(`i2cWrite(${adr}) => ${rc}`); // wakeup writes fail
         rpio.i2cEnd();
+        return rc;
     }
 
     function i2cRead(adr, inBuf) {
@@ -33,8 +34,8 @@
         rpio.i2cSetSlaveAddress(adr);
         rpio.msleep(15);
         var rc = rpio.i2cRead(inBuf);
-        rc && winston.warn(`i2cRead(${adr}) => ${rc}`);
         rpio.i2cEnd();
+        return rc;
     }
 
 	var curState = null;
@@ -195,21 +196,35 @@
                         winston.debug(`Sensor ${s.name} type:${s.type} (not configured)`);
                         return;
                     }
-                    if (s.readErrors >= MAX_READ_ERRORS) {
-                        winston.debug(`Sensor ${s.name} type:${s.type} (muted due to errors)`);
-                        return;
-                    }
 
                     winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
-                    s.i2cRead = i2cRead;
+                    var mute = s.readErrors >= MAX_READ_ERRORS;
+                    s.i2cRead = (adr,inBuf) => {
+                        var rc = i2cRead(adr.inBuf);
+                        if (rc) {
+                            if (mute) {
+                                winston.debug(`i2cRead(${adr}) => ${rc}`);
+                            } else {
+                                winston.warn(`i2cRead(${adr}) => ${rc}`);
+                            }
+                        }
+                    }
                     s.i2cWrite = i2cWrite;
                     s.emitter = this.vessel.emitter;
                     s.read().then(r=>{
                         winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
                     }).catch(e=>{
-                        winston.info(`OyaPi.process_sensors() readErrors:#${s.readErrors} sensor:${s.name} error:`, e.message);
+                        if (mute) {
+                            winston.debug(`OyaPi.process_sensors()`,
+                                `readErrors:#${s.readErrors} sensor:${s.name} error:`,
+                                e.message);
+                        } else {
+                            winston.info(`OyaPi.process_sensors()`,
+                                `readErrors:#${s.readErrors} sensor:${s.name} error:`,
+                                e.message);
+                        }
                         if (s.readErrors === MAX_READ_ERRORS) {
-                            winston.error(`sensor ${s.name}/${s.loc} disabled (over ${MAX_READ_ERRORS} errors)`);
+                            winston.warn(`sensor ${s.name}/${s.loc} errors muted (over ${MAX_READ_ERRORS} errors)`);
                         }
                     });
                 } catch (e) {
