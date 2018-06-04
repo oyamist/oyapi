@@ -201,8 +201,7 @@
                     winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
                     var now = new Date();
                     var mute = s.readErrors >= MAX_READ_ERRORS && 
-                        s.lastReadWarning != null &&
-                        now - s.lastReadWarning < WARN_INTERVAL;
+                        (s.lastReadWarning == null || now - s.lastReadWarning < WARN_INTERVAL);
                     s.i2cRead = (adr,inBuf) => {
                         var rc = i2cRead(adr.inBuf);
                         if (rc) {
