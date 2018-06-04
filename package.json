@@ -1,6 +1,6 @@
 {
   "name": "oyapi",
-  "version": "0.29.5",
+  "version": "0.29.6",
   "description": "OyaMist for Raspberry Pi 3",
   "main": "index.js",
   "directories": {

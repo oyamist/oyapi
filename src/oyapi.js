@@ -203,7 +203,7 @@
                     var mute = s.readErrors >= MAX_READ_ERRORS && 
                         (s.lastReadWarning == null || now - s.lastReadWarning < WARN_INTERVAL);
                     s.i2cRead = (adr,inBuf) => {
-                        var rc = i2cRead(adr.inBuf);
+                        var rc = i2cRead(adr, inBuf);
                         if (rc) {
                             if (mute) {
                                 winston.debug(`i2cRead(${adr}) => ${rc}`);
