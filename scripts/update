@@ -20,8 +20,12 @@ RC=$?; if [ "$RC" != "0" ]; then
 fi
 grep Already /tmp/git.log
 RC=$?; if [ "$RC" == "0" ]; then
-    echo -e "UPDATE\t: Your system is up-to-date. No further action required"
-    exit 0
+    if [ "$1" == "-f" ]; then
+        echo -e "UPDATE\t: Your system is up-to-date. Forcing update..."
+    else
+        echo -e "UPDATE\t: Your system is up-to-date. No further action required"
+        exit 0
+    fi
 fi
 sync
 
