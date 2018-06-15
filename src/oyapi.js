@@ -223,7 +223,7 @@
                                 `readErrors:#${s.readErrors} sensor:${s.name} error:`,
                                 e.message);
                         } else {
-                            winston.info(`OyaPi.process_sensors()`,
+                            winston.debug(`OyaPi.process_sensors()`,
                                 `readErrors:#${s.readErrors} sensor:${s.name} error:`,
                                 e.message);
                         }
