@@ -93,7 +93,7 @@
                         rpio.pwmSetData(pin, value*pwmMax);
                     }
                 } catch (e) {
-                    winston.error('oyapi:', e.stack);
+                    winston.error('OyaPi-init_rpio()', e.stack);
                 }
             });
             winston.info(`OyaPi.init_rpio().emitter on:${OyaPi.EVENT_RELAY}`);
@@ -103,7 +103,7 @@
                         rpio.open(pin, rpio.OUTPUT, value ? rpio.HIGH : rpio.LOW);
                     }
                 } catch(e) {
-                    winston.error('oyapi:', e.stack);
+                    winston.error('OyaPi.init_rpio()', e.stack);
                 }
                 //ahat.light.power.enable(value);
             });
@@ -218,6 +218,7 @@
                     s.read().then(r=>{
                         winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
                     }).catch(e=>{
+                        s.fault = e;
                         if (mute) {
                             winston.debug(`OyaPi.process_sensors()`,
                                 `readErrors:#${s.readErrors} sensor:${s.name} error:`,
@@ -229,7 +230,8 @@
                         }
                     });
                 } catch (e) {
-                    winston.error(`process_sensors error sensor ${s.name}`, e.stack);
+                    s.fault = e;
+                    winston.debug(`process_sensors error sensor ${s.name}`, e.stack);
                 }
             });
 		}
