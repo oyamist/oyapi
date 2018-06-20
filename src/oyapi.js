@@ -200,17 +200,11 @@
 
                     winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
                     var now = new Date();
-                    var mute = s.readErrors >= MAX_READ_ERRORS && 
-                        (s.lastReadWarning == null || now - s.lastReadWarning < WARN_INTERVAL);
                     s.i2cRead = (adr,inBuf) => {
                         var rc = i2cRead(adr, inBuf);
                         if (rc) {
-                            if (mute) {
-                                winston.debug(`i2cRead(${adr}) => ${rc}`);
-                            } else {
-                                winston.warn(`i2cRead(${adr}) => ${rc}`);
-                                s.lastReadWarning = now;
-                            }
+                            var e = new Error(`OyaPi.process_sensors().i2cRead(${s.name}) rc:${rc}`);
+                            s.fault = e;
                         }
                     }
                     s.i2cWrite = i2cWrite;
@@ -219,15 +213,6 @@
                         winston.debug(`sensor ${s.name} ${JSON.stringify(r)}`);
                     }).catch(e=>{
                         s.fault = e;
-                        if (mute) {
-                            winston.debug(`OyaPi.process_sensors()`,
-                                `readErrors:#${s.readErrors} sensor:${s.name} error:`,
-                                e.message);
-                        } else {
-                            winston.debug(`OyaPi.process_sensors()`,
-                                `readErrors:#${s.readErrors} sensor:${s.name} error:`,
-                                e.message);
-                        }
                     });
                 } catch (e) {
                     s.fault = e;
