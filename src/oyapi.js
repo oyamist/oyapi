@@ -200,13 +200,7 @@
 
                     winston.debug(`Sensor ${s.name} type:${s.type} comm:${s.comm}`);
                     var now = new Date();
-                    s.i2cRead = (adr,inBuf) => {
-                        var rc = i2cRead(adr, inBuf);
-                        if (rc) {
-                            var e = new Error(`OyaPi.process_sensors().i2cRead(${s.name}) rc:${rc}`);
-                            s.fault = e;
-                        }
-                    }
+                    s.i2cRead = i2cRead;
                     s.i2cWrite = i2cWrite;
                     s.emitter = this.vessel.emitter;
                     s.read().then(r=>{
