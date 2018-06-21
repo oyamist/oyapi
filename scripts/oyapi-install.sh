@@ -3,12 +3,12 @@
 echo -e "INSTALL\t: `date` setting up Raspberry Pi"
 
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y upgrade
 
 sudo apt-get -y install vim
 
 echo -e "INSTALL\t: installing WIFI access point"
-sudo apt-get install dnsmasq hostapd
+sudo apt-get -y install dnsmasq hostapd
 sudo systemctl stop dnsmasq
 sudo systemctl stop hostapd
 
