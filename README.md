@@ -44,8 +44,8 @@ OyaPi displays summary status of all active OyaPi devices on the local subnet.
     * Localization Options: Change Timezone: _(set timezone for scheduling)_
     * Interfacing Options: Camera _(optional)_
     * Interfacing Options: SSH _(for remote access)_
-    * Interfacing Options: I2C _(for sensors_
-    * Interfacing Options: 1-Wire _(for sensors_
+    * Interfacing Options: I2C _(for sensors)_
+    * Interfacing Options: 1-Wire _(for sensors)_
     * Finish and Reboot
 
 #### Install OyaPi
@@ -58,7 +58,7 @@ mkdir github
 cd github
 git clone https://github.com/oyamist/oyapi
 cd oyapi
-scripts/oyapi-install.sh
+./scripts/oyapi-install.sh
 ```
 Reboot your Raspberry Pi and use a Chrome browser to access OyaPi using the hostname
 you configured above (e.g., http://bioreactor1)
