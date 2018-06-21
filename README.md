@@ -36,16 +36,16 @@ OyaPi displays summary status of all active OyaPi devices on the local subnet.
 
 #### Set up the Raspberry Pi 3 operating system:
 
-1. Install [Raspbian Noobs](https://www.raspberrypi.org/downloads/noobs/) on a 16GB Micro SD card.
-1. With `sudo raspi-config`, configure the following:
+1. Install Rasbpian using [Noobs or Noobs Lite](https://www.raspberrypi.org/downloads/noobs/) on a 16GB Micro SD card (use larger capacity cards if you intend to use a camera). Choose a [fast SD card](http://www.pidramble.com/wiki/benchmarks/microsd-cards)
+1. From a terminal window or console, use `sudo raspi-config` to configure the following:
     * Change password _(for your safety!)_
-    * Advanced: Change hostname _(e.g., bioreactor1)_
-    * Advanced: Enable SSH _(for remote access)_
-    * Advanced: Enable I2C _(for sensors)_
-    * Advanced: Enable 1-Wire _(for sensors)_
-    * Internationalization: Set timezone _(for scheduling)_
-    * Enable camera _(optional)_
-    * Enable boot to command line
+    * Network Options: Change hostname _(e.g., bioreactor1)_
+    * Boot Options: Desktop / CLI : Console _(recommended)_
+    * Localization Options: Change Timezone: _(set timezone for scheduling)_
+    * Interfacing Options: Camera _(optional)_
+    * Interfacing Options: SSH _(for remote access)_
+    * Interfacing Options: I2C _(for sensors_
+    * Interfacing Options: 1-Wire _(for sensors_
     * Finish and Reboot
 
 #### Install OyaPi
@@ -55,6 +55,7 @@ to install OyaPi (this will take several minutes):
 
 ```bash
 mkdir github
+cd github
 git clone https://github.com/oyamist/oyapi
 cd oyapi
 scripts/oyapi-install.sh
