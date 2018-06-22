@@ -7,8 +7,6 @@ sudo apt-get -y upgrade
 
 sudo apt-get -y install vim
 
-./scripts/oyapi-wifi-ap.sh
-
 if [ ! -e node_modules ]; then
     echo -e "INSTALL\t: installing nodejs"
     curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -o
@@ -40,5 +38,7 @@ echo -e "INSTALL\t: installing Node V8"
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 
 scripts/sqlite3-install.sh
+
+#./scripts/oyapi-wifi-ap.sh
 
 echo -e "INSTALL\t: `date` OyaMist Raspberry Pi setup completed"
