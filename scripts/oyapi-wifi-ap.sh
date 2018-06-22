@@ -47,14 +47,31 @@ sudo echo -e "wpa_passphrase=Aeroponics" >> $HOSTAPD
 sudo echo -e "wpa_key_mgmt=WPA-PSK" >> $HOSTAPD
 sudo echo -e "wpa_pairwise=TKIP" >> $HOSTAPD
 sudo echo -e "rsn_pairwise=CCMP" >> $HOSTAPD
-
 sudo sed -i 'sx^#DAEMON_CONF.*xDAEMON_CONF="/etc/hostapd/hostapd.conf"x' /etc/default/hostapd
 
 echo -e "INSTALL\t: Starting hostapd WiFi access point  service"
 sudo systemctl start hostapd
-RC=$?; echo -e "INSTALL\t: => RC:$RC"
+RC=$?; if [ "$RC" != "0" ]; then
+    echo -e "ERROR\t: hostapd => RC:$RC"
+    exit $RC
+fi
+
 echo -e "INSTALL\t: Starting dnsmasq DNS  service"
 sudo systemctl start dnsmasq
-RC=$?; echo -e "INSTALL\t: => RC:$RC"
+RC=$?; if [ "$RC" != "0" ]; then
+    echo -e "ERROR\t: dnsmasq => RC:$RC"
+    exit $RC
+fi
+
+echo -e "INSTALL\t: Enable IPv4 packet forwarding (wlan0 <-> eth0)"
+sudo sed -i 'sx^#net.ipv4.ip_forward.*xnet.ipv4.ip_forward=1x' /etc/sysctl.conf
+sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+grep iptables-restore /etc/rc.local
+RC=$?; if [ "$RC" != "0" ]; then
+    sudo sed -i "\$i iptables-restore < /etc/iptables.ipv4.nat" /etc/rc.local
+fi
+
+echo -e "INSTALL\t: Starting hostapd WiFi access point  service"
 
 echo -e "INSTALL\t: `date` Raspberry Pi WIFI Access Point (END)"
