@@ -7,12 +7,7 @@ sudo apt-get -y upgrade
 
 sudo apt-get -y install vim
 
-echo -e "INSTALL\t: installing WIFI access point"
-sudo apt-get -y install dnsmasq hostapd
-sudo systemctl stop dnsmasq
-sudo systemctl stop hostapd
-
-exit 0
+sudo scripts/oyapi-wifi-ap.sh
 
 if [ ! -e node_modules ]; then
     echo -e "INSTALL\t: installing nodejs"
