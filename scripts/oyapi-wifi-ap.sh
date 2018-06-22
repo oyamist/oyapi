@@ -33,21 +33,21 @@ sudo service dhcpcd restart
 
 echo -e "INSTALL\t: Setting up hostapd.conf for WiFi access point"
 HOSTAPD=/etc/hostapd/hostapd.conf
-sudo rm $HOSTAPD
+sudo rm -f $HOSTAPD
 sudo echo -e "interface=wlan0" >> $HOSTAPD
-sudo echo -e "driver=nl80211 >> $HOSTAPD
-sudo echo -e "ssid=OyaMist>> $HOSTAPD
-sudo echo -e "hw_mode=g>> $HOSTAPD
-sudo echo -e "channel=7>> $HOSTAPD
-sudo echo -e "wmm_enabled=0>> $HOSTAPD
-sudo echo -e "macaddr_acl=0>> $HOSTAPD
-sudo echo -e "auth_algs=1>> $HOSTAPD
-sudo echo -e "ignore_broadcast_ssid=0>> $HOSTAPD
-sudo echo -e "wpa=2>> $HOSTAPD
-sudo echo -e "wpa_passphrase=Aeroponics>> $HOSTAPD
-sudo echo -e "wpa_key_mgmt=WPA-PSK>> $HOSTAPD
-sudo echo -e "wpa_pairwise=TKIP>> $HOSTAPD
-sudo echo -e "rsn_pairwise=CCMP>> $HOSTAPD
+sudo echo -e "driver=nl80211" >> $HOSTAPD
+sudo echo -e "ssid=OyaMist" >> $HOSTAPD
+sudo echo -e "hw_mode=g" >> $HOSTAPD
+sudo echo -e "channel=7" >> $HOSTAPD
+sudo echo -e "wmm_enabled=0" >> $HOSTAPD
+sudo echo -e "macaddr_acl=0" >> $HOSTAPD
+sudo echo -e "auth_algs=1" >> $HOSTAPD
+sudo echo -e "ignore_broadcast_ssid=0" >> $HOSTAPD
+sudo echo -e "wpa=2" >> $HOSTAPD
+sudo echo -e "wpa_passphrase=Aeroponics" >> $HOSTAPD
+sudo echo -e "wpa_key_mgmt=WPA-PSK" >> $HOSTAPD
+sudo echo -e "wpa_pairwise=TKIP" >> $HOSTAPD
+sudo echo -e "rsn_pairwise=CCMP" >> $HOSTAPD
 
 sudo sed -i 'sx.*DAEMON_CONF.*xDAEMON_CONF="/etc/hostapd/hostapd.conf"x' /etc/default/hostapd
 
