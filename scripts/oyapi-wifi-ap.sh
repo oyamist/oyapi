@@ -25,7 +25,6 @@ else
     sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 fi
 sudo echo -e "interface=wlan0" > /etc/dnsmasq.conf
-sudo echo -e "usually wlan0" >> /etc/dnsmasq.conf
 sudo echo -e "    192.168.4.2,192.168.4.20,255.255.255.0,24h" >> /etc/dnsmasq.conf
 
 echo -e "INSTALL\t: Starting dhcpcd service"
@@ -51,11 +50,11 @@ sudo echo -e "rsn_pairwise=CCMP" >> $HOSTAPD
 
 sudo sed -i 'sx^#DAEMON_CONF.*xDAEMON_CONF="/etc/hostapd/hostapd.conf"x' /etc/default/hostapd
 
-echo -e "INSTALL\t: Starting dnsmasq DNS  service"
-sudo systemctl start dnsmasq
-RC=$?; echo -e "INSTALL\t: => RC:$RC"
 echo -e "INSTALL\t: Starting hostapd WiFi access point  service"
 sudo systemctl start hostapd
+RC=$?; echo -e "INSTALL\t: => RC:$RC"
+echo -e "INSTALL\t: Starting dnsmasq DNS  service"
+sudo systemctl start dnsmasq
 RC=$?; echo -e "INSTALL\t: => RC:$RC"
 
 echo -e "INSTALL\t: `date` Raspberry Pi WIFI Access Point (END)"
