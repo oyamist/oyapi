@@ -49,6 +49,11 @@ sudo echo -e "wpa_key_mgmt=WPA-PSK" >> $HOSTAPD
 sudo echo -e "wpa_pairwise=TKIP" >> $HOSTAPD
 sudo echo -e "rsn_pairwise=CCMP" >> $HOSTAPD
 
-sudo sed -i 'sx.*DAEMON_CONF.*xDAEMON_CONF="/etc/hostapd/hostapd.conf"x' /etc/default/hostapd
+sudo sed -i 'sx^#DAEMON_CONF.*xDAEMON_CONF="/etc/hostapd/hostapd.conf"x' /etc/default/hostapd
+
+echo -e "INSTALL\t: Starting dnsmasq DNS  service"
+sudo systemctl stop dnsmasq
+echo -e "INSTALL\t: Starting hostapd WiFi access point  service"
+sudo systemctl stop hostapd
 
 echo -e "INSTALL\t: `date` Raspberry Pi WIFI Access Point (END)"
