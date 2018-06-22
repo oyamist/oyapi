@@ -14,8 +14,8 @@ RC=$?; if [ "$RC" == "0" ]; then
     echo -e "INSTALL\t: DHCP already configured for ${STATICIP}"
 else
     echo -e "INSTALL\t: configuring DHCP for ${STATICIP}..."
-    sudo echo -e "interface wlan0" >> /etc/dhpcd.conf
-    sudo echo -e "    static ip_address=${STATICIP}/24" >> /etc/dhpcd.conf
+    sudo echo -e "interface wlan0" >> /etc/dhcpcd.conf
+    sudo echo -e "    static ip_address=${STATICIP}/24" >> /etc/dhcpcd.conf
 fi
 
 echo -e "INSTALL\t: `date` Raspberry Pi WIFI Access Point (END)"
