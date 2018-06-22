@@ -9,7 +9,7 @@ sudo systemctl stop dnsmasq
 sudo systemctl stop hostapd
 
 STATICIP=192.168.4.1
-grep -e "${STATICIP}" /etc/dhpcd.conf
+grep -e "${STATICIP}" /etc/dhcpcd.conf
 RC=$?; if [ "$RC" == "0" ]; then
     echo -e "INSTALL\t: DHCP already configured for ${STATICIP}"
 else
