@@ -1,6 +1,11 @@
 #!/bin/bash
 
 echo -e "INSTALL\t: `date` setting up Raspberry Pi"
+sudo pwd
+RC=$?; if [ "$RC" != "0" ]; then
+    echo -e "INSTALL\t: sudo failed"
+    exit 1
+fi
 
 sudo apt-get update
 sudo apt-get -y upgrade
