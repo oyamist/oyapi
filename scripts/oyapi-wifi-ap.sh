@@ -52,8 +52,10 @@ sudo echo -e "rsn_pairwise=CCMP" >> $HOSTAPD
 sudo sed -i 'sx^#DAEMON_CONF.*xDAEMON_CONF="/etc/hostapd/hostapd.conf"x' /etc/default/hostapd
 
 echo -e "INSTALL\t: Starting dnsmasq DNS  service"
-sudo systemctl stop dnsmasq
+sudo systemctl start dnsmasq
+RC=$?; echo -e "INSTALL\t: => RC:$RC"
 echo -e "INSTALL\t: Starting hostapd WiFi access point  service"
-sudo systemctl stop hostapd
+sudo systemctl start hostapd
+RC=$?; echo -e "INSTALL\t: => RC:$RC"
 
 echo -e "INSTALL\t: `date` Raspberry Pi WIFI Access Point (END)"
