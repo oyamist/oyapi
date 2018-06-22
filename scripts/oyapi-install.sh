@@ -7,7 +7,7 @@ sudo apt-get -y upgrade
 
 sudo apt-get -y install vim
 
-sudo scripts/oyapi-wifi-ap.sh
+./scripts/oyapi-wifi-ap.sh
 
 if [ ! -e node_modules ]; then
     echo -e "INSTALL\t: installing nodejs"
