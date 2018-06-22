@@ -25,7 +25,7 @@ else
     sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 fi
 sudo echo -e "interface=wlan0" > /etc/dnsmasq.conf
-sudo echo -e "    192.168.4.2,192.168.4.20,255.255.255.0,24h" >> /etc/dnsmasq.conf
+sudo echo -e "dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h" >> /etc/dnsmasq.conf
 
 echo -e "INSTALL\t: Starting dhcpcd service"
 sudo service dhcpcd restart
