@@ -35,7 +35,7 @@ fi
 #scripts/opencv-install.sh
 
 echo -e "INSTALL\t: installing webcam motion capture"
-sudo apt install motion
+sudo apt -y install motion
 sudo mkdir -p /var/log/motion
 sudo chown pi:pi /var/log/motion
 
