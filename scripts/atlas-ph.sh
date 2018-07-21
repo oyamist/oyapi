@@ -18,7 +18,7 @@ rpio.init({
 rpio.i2cBegin();
 rpio.i2cSetBaudRate(10000);    /* 100kHz minimum speed. Cable length < 500mm */
 var rc = rpio.i2cSetSlaveAddress(I2C_ADDRESS);
-console.log(`i2cSetSlaveAddress$({I2C_ADDRESS}) => ${rc}`);
+console.log(`i2cSetSlaveAddress(${I2C_ADDRESS}) => ${rc}`);
 
 // read info
 var rc = rpio.i2cWrite(Buffer([CMD_READ_INFO]));
