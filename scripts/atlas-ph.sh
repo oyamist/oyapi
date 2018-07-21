@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-console.log("TEST\t: Atlas Scientific EC_EZO Sensor Test");
+console.log("TEST\t: Atlas Scientific pH_EZO Sensor Test");
 
 const rpio = require('rpio');
 
