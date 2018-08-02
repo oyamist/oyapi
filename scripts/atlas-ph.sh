@@ -16,7 +16,7 @@ rpio.init({
     gpiomem: false,
 });
 rpio.i2cBegin();
-rpio.i2cSetBaudRate(10000);    /* 100kHz minimum speed. Cable length < 500mm */
+rpio.i2cSetBaudRate(100000);    /* 100kHz minimum speed. Cable length < 500mm */
 var rc = rpio.i2cSetSlaveAddress(I2C_ADDRESS);
 console.log(`i2cSetSlaveAddress(${I2C_ADDRESS}) => ${rc}`);
 
