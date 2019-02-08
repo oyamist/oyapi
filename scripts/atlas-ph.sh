@@ -6,22 +6,22 @@ const rpio = require('rpio');
 
 const I2C_ADDRESS = 0x63;
 const CMD_READ_SENSE = 0x52; // 'R'
-const CMD_READ_INFO = 0x49; // 'I'
+const CMD_READ_INFO = [0x53,0x74,0x61,0x74,0x75,0x73]; // 'Status'
 const READ_MS_R = 900;
 const READ_MS_I = 300;
 const BYTES_SENSE_RESPONSE = 7;
-const BYTES_INFO_RESPONSE = 12;
+const BYTES_INFO_RESPONSE = 17;
 
 rpio.init({
     gpiomem: false,
 });
 rpio.i2cBegin();
 rpio.i2cSetBaudRate(100000);    /* 100kHz minimum speed. Cable length < 500mm */
-var rc = rpio.i2cSetSlaveAddress(I2C_ADDRESS);
-console.log(`i2cSetSlaveAddress(${I2C_ADDRESS}) => ${rc}`);
+rpio.i2cSetSlaveAddress(I2C_ADDRESS); // returns undefined
+console.log(`i2cSetSlaveAddress(${I2C_ADDRESS})`);
 
 // read info
-var rc = rpio.i2cWrite(Buffer([CMD_READ_INFO]));
+var rc = rpio.i2cWrite(Buffer(CMD_READ_INFO));
 console.log(`i2cWrite => ${rc}`);
 var inBuf = Buffer.alloc(BYTES_INFO_RESPONSE);
 rpio.msleep(READ_MS_I);
@@ -29,7 +29,7 @@ var rc = rpio.i2cRead(inBuf);
 console.log(`i2cRead => ${rc}`);
 if (inBuf[0] === 1 && inBuf[inBuf.length-1] === 0) {
     console.log("response", 
-        inBuf.toString("utf8", 0, inBuf.length-2), // ASCII 
+        inBuf.toString("ascii", 0, inBuf.length-2), // ASCII 
         "OK");
 } else {
     console.log("response ", 
