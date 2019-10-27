@@ -62,3 +62,24 @@ cd oyapi
 ```
 Reboot your Raspberry Pi and use a Chrome browser to access OyaPi using the hostname
 you configured above (e.g., http://bioreactor1)
+
+#### Recommended Hardware
+OyaPi was developed and tested on a Raspberry Pi 3B+. 
+It will probably work on other Raspberry Pi's.
+
+One of the issues you will need to deal with is safety.
+Farming requires water and water around electricity is dangerous.
+The USA electrical code is quite strict about outdoor voltages.
+Any voltage exceeding 20V has very strong code requirements.
+This means that 24V pumps would require installation by licensed
+electritian. Generally speaking, if you design your system around 12V
+power and backup you will be fine. 
+
+The Raspberry Pi doesn't take 12V. It needs 5V.
+To get 5V from 12V, just use an LM2596 buck converter available on Amazon.
+
+A very fun project is to set up your grow lights using OyaPi.
+The AdaFruit https://www.adafruit.com/product/2935 controllable
+power supply is ideal for this.
+
+
