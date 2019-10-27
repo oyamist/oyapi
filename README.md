@@ -66,6 +66,9 @@ you configured above (e.g., http://bioreactor1)
 #### Recommended Hardware
 OyaPi was developed and tested on a Raspberry Pi 3B+. 
 It will probably work on other Raspberry Pi's.
+Choose the fastest SD card you can afford. You only need
+space for logging, so 16GB should be fine.
+OyaPi was tested using NOOBS. It will probably work on other Linux distros.
 
 One of the issues you will need to deal with is safety.
 Farming requires water and water around electricity is dangerous.
